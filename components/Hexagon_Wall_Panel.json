@@ -1,8 +1,8 @@
 {
     "ProductName": "Hexagon Wall Panel",
     "DisplayName": "Hexagon Wall Panel - 30 LED",
-    "Brand" : "User",
-    "Type" : "Strip",
+    "Brand" : "Tokala",
+    "Type" : "custom",
     "LedCount" : 30,
     "Width": 15,
     "Height": 12,
