@@ -2,7 +2,7 @@
 **SRGBmods is hosting several projects to enhance your SignalRGB experience and make your life a bit easier:**
 ===
 
-To explain what this repository contains (directory names listed below):
+*Explaination of what this repository contains (directory names listed below):*
 
 **Components:** Verified devices connected to aRGB controllers that should go in `%userprofile%\Documents\WhirlwindFX\Components`
 
