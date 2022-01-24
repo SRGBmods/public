@@ -4,9 +4,9 @@
 
 To explain what this repository contains (directory names listed below):
 
-Components: Verified devices connected to aRGB controllers that should go in `%userprofile%\Documents\WhirlwindFX\Components`
+**Components:** Verified devices connected to aRGB controllers that should go in `%userprofile%\Documents\WhirlwindFX\Components`
 
-Plugins: Updated Device plugins that should go in `%userprofile%\Documents\WhirlwindFX\Plugins`
+**Plugins:** Updated Device plugins that should go in `%userprofile%\Documents\WhirlwindFX\Plugins`
 
 **[CompGen](https://srgbmods.net/compgen/)**
 - generate custom shaped components for your fans/strips using your own desired name and image!
