@@ -10,7 +10,7 @@ To explain what this repository contains (directory names listed below):
 
 ---
 
-*Additional* resources:
+*Additional resources:*
 
 **[CompGen](https://srgbmods.net/compgen/)**
 - generate custom shaped components for your fans/strips using your own desired name and image!
