@@ -5,7 +5,7 @@ export function Publisher() { return "WhirlwindFX"; } // Based on Lighting Node 
 export function Size() { return [1,1]; }
 export function DefaultPosition(){return [0,0]}
 export function DefaultScale(){return 1.0}
-export function ControllableParameters(){
+export function ControllableParameters(){
     return [
     {"property":"LightingMode", "label":"Lighting Mode", "type":"combobox", "values":["Canvas","Forced"], "default":"Canvas"},
     {"property":"forcedColor", "label":"Forced Color","min":"0","max":"360","type":"color","default":"009bde"},

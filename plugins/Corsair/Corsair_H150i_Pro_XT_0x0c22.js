@@ -45,7 +45,7 @@ export function VendorId() { return  0x1b1c; }
 export function ProductId() { return 0x0C22; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [5, 5]; }
-export function ControllableParameters(){
+export function ControllableParameters(){
     return [
     {"property":"LightingMode", "label":"Lighting Mode", "type":"combobox", "values":["Canvas","Forced"], "default":"Canvas"},
     {"property":"forcedColor", "label":"Forced Color","min":"0","max":"360","type":"color","default":"009bde"},

@@ -5,7 +5,7 @@ export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [24, 9]; }
 export function DefaultPosition() {return [75,70]; }
 export function DefaultScale(){return 8.0;}
-export function ControllableParameters(){
+export function ControllableParameters(){
     return [
         {"property":"shutdownColor", "label":"Shutdown Color","min":"0","max":"360","type":"color","default":"009bde"},
         {"property":"LightingMode", "label":"Lighting Mode", "type":"combobox", "values":["Canvas","Forced"], "default":"Canvas"},
