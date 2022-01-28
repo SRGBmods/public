@@ -12,6 +12,7 @@
 
 ---
 *Better Discord Resources*:
+
 [SignalRGB Better Discord Theme](https://github.com/Fanman03/discord-signalrgb-theme)
 
 ---
