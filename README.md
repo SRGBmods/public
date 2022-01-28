@@ -12,6 +12,10 @@
 
 ---
 
+[SignalRGB Better Discord Theme](https://github.com/Fanman03/discord-signalrgb-theme)
+
+---
+
 *Additional resources:*
 
 **[CompGen](https://srgbmods.net/compgen/)**
