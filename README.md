@@ -11,7 +11,7 @@
 ***Please disable (move device plugins out of the `%userprofile%\Documents\WhirlwindFX\Plugins` directory after each SignalRGB release as they may be included in the main line releases, and may include bug fixes or stability fixes that supersede this repository.)***
 
 ---
-
+*Better Discord Resources*:
 [SignalRGB Better Discord Theme](https://github.com/Fanman03/discord-signalrgb-theme)
 
 ---
