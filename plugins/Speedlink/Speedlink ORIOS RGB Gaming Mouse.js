@@ -18,11 +18,7 @@ var vLedNames = [
 ];
 
 var vLedPositions = [
-	[3,5], [3,4], [3,3], [3,2], [3,1], [3,0]
-];
-
-var vLedMapping = [
-	0, 1, 2, 3, 4, 5
+	[3,5], [3,0], [3,1], [3,2], [3,3], [3,4]
 ];
 
 export function LedNames()
@@ -37,7 +33,7 @@ export function LedPositions()
 
 export function Initialize()
 {
-	sendPacketString("04 01 00 01", 64);
+
 }
 
 function SendPacket(shutdown = false)
@@ -50,6 +46,8 @@ function SendPacket(shutdown = false)
 	packet[3] = 0x12;
 	packet[4] = 0x38;
 	packet[5] = 0x00;
+	packet[6] = 0x00;
+	packet[7] = 0x00;
 
 	for(var iIdx = 0; iIdx < vLedPositions.length; iIdx++)
 	{
@@ -68,14 +66,15 @@ function SendPacket(shutdown = false)
 		packet[8+(iIdx*3)+2] = mxPxColor[2];
 		packet[8+(iIdx*3)+4] = mxPxColor[1];
 	}
+	sendPacketString("04 01 00 01", 64);
 	device.write(packet,64);
 	sendPacketString("04 02 00 02", 64);
-	device.pause(1);
 }
 
 export function Render()
 {	
 	SendPacket();
+	device.pause(1);
 }
 
 export function Shutdown()
@@ -108,7 +107,7 @@ function hexToRgb(hex)
 
 export function Validate(endpoint)
 {
-	return endpoint.interface === 1;
+	return endpoint.interface === 1 && endpoint.usage === 0x0092 && endpoint.usage_page === 0xFF1C && endpoint.collection === 4;
 }
 
 export function Image()

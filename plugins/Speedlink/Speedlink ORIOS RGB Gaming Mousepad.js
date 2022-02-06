@@ -37,7 +37,7 @@ export function LedPositions()
 
 export function Initialize()
 {
-	sendPacketString("04 01 00 01", 64);
+
 }
 
 function SendPacket(shutdown = false)
@@ -67,17 +67,20 @@ function SendPacket(shutdown = false)
 		packet[8+(iIdx*3)+2] = mxPxColor[2];
 		packet[8+(iIdx*3)+4] = mxPxColor[1];
 	}
+	sendPacketString("04 01 00 01", 64);
 	device.write(packet,64);
+	sendPacketString("04 02 00 02", 64);
 }
 
 export function Render()
 {	
 	SendPacket();
+	device.pause(1);
 }
 
 export function Shutdown()
 {
-	sendPacketString("04 02 00 02", 64);
+
 }
 
 function sendPacketString(string, size)
@@ -105,7 +108,7 @@ function hexToRgb(hex)
 
 export function Validate(endpoint)
 {
-	return endpoint.interface === 1;
+	return endpoint.interface === 1 && endpoint.usage === 0x0092 && endpoint.usage_page === 0xFF1C && endpoint.collection === 4;
 }
 
 export function Image()
