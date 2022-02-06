@@ -3,8 +3,8 @@ export function VendorId() { return 0x0c45; }
 export function ProductId() { return 0x5F01; }
 export function Publisher() { return "FeuerSturm"; }
 export function Size() { return [5,6]; }
-export function DefaultPosition(){return [250,150]}
-export function DefaultScale(){return 20.0}
+export function DefaultPosition(){return [100,100]}
+export function DefaultScale(){return 10.0}
 export function ControllableParameters(){
 	return [
 		{"property":"shutdownColor", "label":"Shutdown Color","min":"0","max":"360","type":"color","default":"009bde"},
