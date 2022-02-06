@@ -3,8 +3,8 @@ export function VendorId() { return 0x0c45; }
 export function ProductId() { return 0x763D; }
 export function Publisher() { return "FeuerSturm"; }
 export function Size() { return [4,3]; }
-export function DefaultPosition(){return [50,100]}
-export function DefaultScale(){return 20.0}
+export function DefaultPosition(){return [50,50]}
+export function DefaultScale(){return 28.0}
 export function ControllableParameters(){
 	return [
 		{"property":"shutdownColor", "label":"Shutdown Color","min":"0","max":"360","type":"color","default":"009bde"},
@@ -15,7 +15,6 @@ export function ControllableParameters(){
 export function ConflictingProcesses() {  
 	return ["ORIOS.exe"];  
 }
-
 
 var vLedNames = [
 	"Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"
