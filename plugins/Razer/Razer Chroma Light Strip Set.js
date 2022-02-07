@@ -40,12 +40,12 @@ function SetupChannels()
 
 export function LedNames()
 {
-  return vLedNames;
+	return vLedNames;
 }
 
 export function LedPositions()
 {
-  return vLedPositions;
+	return vLedPositions;
 }
 
 export function Initialize()
@@ -58,19 +58,19 @@ export function Initialize()
 	packet[2] = 0x1F;
 	packet[6] = 0x02;
 	packet[8] = 0x84;
-    packet[89] = CalculateCrc(packet);
-    device.send_report(packet, 91);
+	packet[89] = CalculateCrc(packet);
+	device.send_report(packet, 91);
 	
 	packet[8] = 0x04;
 	packet[9] = 0x03;
-    packet[89] = CalculateCrc(packet);
-    device.send_report(packet, 91);
+	packet[89] = CalculateCrc(packet);
+	device.send_report(packet, 91);
 	
 	packet[2] = 0x08;
 	packet[8] = 0x86;
 	packet[9] = 0x00;
-    packet[89] = CalculateCrc(packet);
-    device.send_report(packet, 91);
+	packet[89] = CalculateCrc(packet);
+	device.send_report(packet, 91);
 	
 	SetupChannels();
 }
@@ -125,9 +125,9 @@ function KeepAlive()
 {
 	if (Date.now() - keepAliveTimer < keepAlivePause)
 	{
-        return
-    }
-    keepAliveTimer = Date.now();
+		return
+	}
+	keepAliveTimer = Date.now();
 	
 	device.set_endpoint(0,1,0x000C,0);
 	
@@ -140,8 +140,8 @@ function KeepAlive()
 	packet[11] = 0x08;
 	packet[12] = 0x01;
 	packet[13] = 0x08;
-    packet[89] = CalculateCrc(packet);
-    device.send_report(packet, 91);
+	packet[89] = CalculateCrc(packet);
+	device.send_report(packet, 91);
 }
 	
 function CalculateCrc(packet)
