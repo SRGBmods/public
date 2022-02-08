@@ -26,9 +26,6 @@ var ChannelArray = [
 	["Channel 3", 120],
 ];
 
-var keepAliveTimer = Date.now();
-var keepAlivePause = 10000;
-
 function SetupChannels()
 {
 	device.SetLedLimit(DeviceMaxLedLimit);
@@ -50,8 +47,6 @@ export function LedPositions()
 
 export function Initialize()
 {
-	keepAliveTimer = Date.now();
-	
 	device.set_endpoint(0,1,0x000C,0);
 	
 	var packet = new Array(91).fill(0);
@@ -71,6 +66,8 @@ export function Initialize()
 	packet[9] = 0x00;
 	packet[89] = CalculateCrc(packet);
 	device.send_report(packet, 91);
+	
+	device.set_endpoint(1,1,0x000C,0);
 	
 	SetupChannels();
 }
@@ -107,8 +104,6 @@ function SendChannel(Channel, shutdown = false)
 		RGBData = device.channel(ChannelArray[Channel][0]).getColors("Inline");
 	}
 	
-	device.set_endpoint(1,1,0x000C,0);
-	
 	var packet = [];		 
 	packet[0] = 0x00;
 	packet[1] = Channel == 2 ? 0x84 : 0x04;
@@ -118,30 +113,6 @@ function SendChannel(Channel, shutdown = false)
 	packet[5] = 0x77;
 	packet = packet.concat(RGBData);
 	device.send_report(packet, 381);
-	device.pause(10);
-}
-
-function KeepAlive()
-{
-	if (Date.now() - keepAliveTimer < keepAlivePause)
-	{
-		return
-	}
-	keepAliveTimer = Date.now();
-	
-	device.set_endpoint(0,1,0x000C,0);
-	
-	var packet = new Array(91).fill(0);
-	packet[0] = 0x00;
-	packet[2] = 0x1F;
-	packet[6] = 0x06;
-	packet[7] = 0x0F;
-	packet[8] = 0x02;
-	packet[11] = 0x08;
-	packet[12] = 0x01;
-	packet[13] = 0x08;
-	packet[89] = CalculateCrc(packet);
-	device.send_report(packet, 91);
 }
 	
 function CalculateCrc(packet)
@@ -160,7 +131,7 @@ export function Render()
 	{
 		SendChannel(i);
 	}
-	KeepAlive();
+	device.pause(10);
 }
 
 export function Validate(endpoint)
