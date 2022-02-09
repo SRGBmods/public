@@ -1,5 +1,6 @@
 *** SERIOSULY ***
 *** DO NOT USE THIS FILE IT IS INCOMPLETE ***
+*** IT WILL NOT ADD ANYTHING FOR YOU! ***
 
 export function Name() { return "ASUS Aura LED Controller"; }
 export function VendorId() { return  0x0B05; }
