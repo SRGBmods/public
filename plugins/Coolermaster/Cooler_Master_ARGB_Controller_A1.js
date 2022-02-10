@@ -1,23 +1,22 @@
-export function Name() { return "Cooler Master ARGB GEN2 Controller"; }
-export function VendorId() { return   0x2516;}
-export function ProductId() { return   0x0173;}
+﻿export function Name() { return "Cooler Master ARGB Controller A1"; }
+export function VendorId() { return 0x2516;}
+export function ProductId() { return 0x0173;}
 export function Publisher() { return "FeuerSturm"; }
 export function Size() { return [1,1]; }
 export function DefaultPosition(){return [1,1]}
 export function DefaultScale(){return 1.0}
-export function ControllableParameters(){
+export function ControllableParameters(){
 	return [
 	{"property":"shutdownColor", "label":"Shutdown Color","min":"0","max":"360","type":"color","default":"009bde"},
 	{"property":"LightingMode", "label":"Lighting Mode", "type":"combobox", "values":["Canvas","Forced"], "default":"Canvas"},
 	{"property":"forcedColor", "label":"Forced Color","min":"0","max":"360","type":"color","default":"009bde"},
-	{"property":"GenCh1", "label":"Channel 1 Mode", "type":"combobox", "values":["GEN1","GEN2"], "default":"GEN1"},
-	{"property":"GenCh2", "label":"Channel 2 Mode", "type":"combobox", "values":["GEN1","GEN2"], "default":"GEN1"},
-	{"property":"GenCh3", "label":"Channel 3 Mode", "type":"combobox", "values":["GEN1","GEN2"], "default":"GEN1"},
+	{"property":"GenCh1", "label":"Channel 1 Mode", "type":"combobox", "values":["GEN1","GEN2"], "default":"GEN1", "tooltip":"GEN2 will ONLY work with daisy-chained Cooler Master GEN2 devices!"},
+	{"property":"GenCh2", "label":"Channel 2 Mode", "type":"combobox", "values":["GEN1","GEN2"], "default":"GEN1", "tooltip":"GEN2 will ONLY work with daisy-chained Cooler Master GEN2 devices!"},
+	{"property":"GenCh3", "label":"Channel 3 Mode", "type":"combobox", "values":["GEN1","GEN2"], "default":"GEN1", "tooltip":"GEN2 will ONLY work with daisy-chained Cooler Master GEN2 devices!"},
 	];
 }
-
-var ParentDeviceName = "Cooler Master ARGB GEN2 Controller";
 export function SupportsSubdevices(){ return true; }
+
 const Gen1ChLedLimit = 48;
 const Gen2ChLedLimit = 80;
 var ChannelArray = [ "Channel 1", "Channel 2", "Channel 3" ]
@@ -93,18 +92,15 @@ export function Initialize()
 export function Shutdown()
 {
 	SendChannel(0, true, savedGenCh1 == 'GEN1' ? false : true);
-	device.pause(10);
 	SendChannel(1, true, savedGenCh2 == 'GEN1' ? false : true);
-	device.pause(10);
 	SendChannel(2, true, savedGenCh3 == 'GEN1' ? false : true);
-	device.pause(10);
 }
 
 function SendChannel(Channel,shutdown = false, GEN2 = false)
 {
 	var ChannelLedCount = device.channel(ChannelArray[Channel]).ledCount;
 
-	var RGBData = []
+	var RGBData = [];
 	if(shutdown)
 	{
 		RGBData = device.createColorArray(shutdownColor, ChannelLedCount, "Inline");

@@ -12,9 +12,7 @@ export function ControllableParameters(){
 		{"property":"forcedColor", "label":"Forced Color","min":"0","max":"360","type":"color","default":"009bde"},
 	];
 }
-export function ConflictingProcesses() {  
-	return ["ORIOS.exe"];  
-}
+export function ConflictingProcesses() { return ["ORIOS.exe"]; }
 
 var vLedNames = [
 	"Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6"
