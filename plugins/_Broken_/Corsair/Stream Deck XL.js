@@ -58,7 +58,7 @@ export function Shutdown()
 
 export function Validate(endpoint)
 {
-    return endpoint.interface === 1;
+    return endpoint.interface === -1;
 }
 
 export function Render() {
