@@ -45,7 +45,6 @@ function GetReport(cmd_class, cmd_id, size) {
     return report;
 }
 
-
 function CalculateCrc(report) {
     var iCrc = 0;
     for (var iIdx = 3; iIdx < 89; iIdx++) {
