@@ -1,13 +1,3 @@
-/*jshint esversion: 6 */
-/*jslint bitwise: true */
-
-let {shutdownColor, LightingMode, forcedColor} = [];
-
-let vLedNames = [
-	"Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10", "Led 11", "Led 12",
-	"Led 13", "Led 14", "Led 15", "Led 16", "Led 17", "Led 18", "Led 19"];
-let vLedPositions = [[5, 0], [4, 0], [1, 0], [0, 2], [0, 3], [0, 4], [0, 5], [1, 6], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [8, 5], [8, 4], [8, 2], [8, 0], [7, 0], [6, 0]];
-
 export function Name() { return "Razer FireFly V2"; }
 export function VendorId() { return 0x1532; }
 export function ProductId() { return 0x0c04; }
@@ -23,6 +13,11 @@ export function ControllableParameters() {
 		{"default":"009bde", "label":"Forced Color", "max":"360", "min":"0", "property":"forcedColor", "type":"color" }
 	];
 }
+
+let vLedNames = [
+	"Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10", "Led 11", "Led 12",
+	"Led 13", "Led 14", "Led 15", "Led 16", "Led 17", "Led 18", "Led 19"];
+let vLedPositions = [[5, 0], [4, 0], [1, 0], [0, 2], [0, 3], [0, 4], [0, 5], [1, 6], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [8, 5], [8, 4], [8, 2], [8, 0], [7, 0], [6, 0]];
 
 function CalculateCrc(report) {
 	let iCrc = 0;
