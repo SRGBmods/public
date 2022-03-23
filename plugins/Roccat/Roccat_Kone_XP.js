@@ -1,5 +1,3 @@
-let { debounce, lod, timeout, PollingRate, shutdownColor, LightingMode, forcedColor, anglesnapping, timeoutlength, dpi1, dpi2, dpi3, dpi4, dpi5 } = [];
-
 export function Name() { return "Roccat Kone XP"; }
 export function VendorId() { return 0x1e7d; }
 export function ProductId() { return 0x2C8B; }
