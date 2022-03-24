@@ -1,0 +1,52 @@
+{
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": false
+        },
+        "extends": "eslint:recommended"
+    },
+    "globals": {
+        "module": "readonly",
+        "device": "readonly"
+    },
+    "rules": {
+        "semi":"warn",
+        "consistent-return": "warn",
+        "curly":"warn",
+        "no-console": "error",
+        "no-var": "warn",
+        "no-useless-return":"warn",
+        "brace-style": ["warn","1tbs", { "allowSingleLine": true }],
+        "indent": ["warn","tab"],
+        "no-unused-vars":"warn",
+        "comma-spacing":["warn", {"after":true,"before":false}],
+        "no-trailing-spaces":"warn",
+        "max-len":["off"],
+        "no-multiple-empty-lines": ["warn",{ "max": 2 }],
+        "no-undef":["warn"],
+        "eqeqeq": "warn",
+        "no-cond-assign":"warn",
+        "padding-line-between-statements": [
+            "warn",
+            { "blankLine": "never", "prev": ["for","if","while"], "next": "*" },
+
+            { "blankLine": "always", "prev": ["block-like","export"], "next": "*" },
+            { "blankLine": "always", "prev": ["let","var","const"], "next": "*" },
+            { "blankLine": "any", "prev": ["let","var","const"], "next": "expression" },
+
+            { "blankLine": "never", "prev": ["let","var","const"], "next": ["let","var","const"] },
+            { "blankLine": "any", "prev": "*", "next": ["let","var","const"] },
+            { "blankLine": "always", "prev": "expression", "next": ["let","var","const"] },
+
+
+            { "blankLine": "never", "prev": ["*","export","block-like"], "next": "export" },
+            { "blankLine": "any", "prev": "*", "next": "export" },
+            { "blankLine": "always", "prev": "expression", "next": ["block-like"] },
+            { "blankLine": "always", "prev": "*", "next": "return" }
+
+        ]
+    
+    }
+}
