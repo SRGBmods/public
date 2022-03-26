@@ -50,7 +50,7 @@ export function LedPositions() {
 }
 
 export function Shutdown() {
-	sendPacketString(StreamDeck_Reset, 64)
+	sendPacketString(StreamDeck_Reset, 64);
 }
 
 export function Validate(endpoint) {
