@@ -16,23 +16,23 @@ export function ControllableParameters()
 }
 let vKeyNames = ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7"];
 
-
 let vKeyPositions = [ [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0] ];
 
 export function Initialize()
 {
-	sendPacketString("00 5a 3a 02 06 01 ", 65);
-	sendPacketString("00 5a 3a 02 16 01 ", 65);
-	sendPacketString("00 5a 3a 03 05 01 01 ", 65);
+	sendPacketString("00 5a 3a 02 06 01", 65);
+	sendPacketString("00 5a 3a 02 16 01", 65);
+	sendPacketString("00 5a 3a 03 05 01 01", 65);
 	sendPacketString("00 5a 3a 06 0b 01 01 01 02 07", 65);
 	sendPacketString("00 5a 3a 03 05 00 03", 65);
 	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
 	sendPacketString("00 5a 3a 03 05 00 03", 65);
 	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
-	sendPacketString("00 5a 3a 02 16 01 ", 65);
-	sendPacketString("00 5a 3a 02 16 01 ", 65);
-	sendPacketString("00 5a 3a 02 16 01 ", 65);
+	sendPacketString("00 5a 3a 02 16 01", 65);
+	sendPacketString("00 5a 3a 02 16 01", 65);
+	sendPacketString("00 5a 3a 02 16 01", 65);
 }
+
 export function LedNames()
 {
 	return vKeyNames;
@@ -62,7 +62,6 @@ export function Shutdown()
 	sendPacketString("00 5a 3a 03 05 00 03", 65);
 	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
 }
-
 
 function ColorApply()
 {
