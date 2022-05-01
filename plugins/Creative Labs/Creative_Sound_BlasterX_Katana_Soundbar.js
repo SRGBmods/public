@@ -16,21 +16,12 @@ export function ControllableParameters()
 }
 let vKeyNames = ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7"];
 
+
 let vKeyPositions = [ [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0] ];
 
 export function Initialize()
 {
-	sendPacketString("00 5a 3a 02 06 01", 65);
-	sendPacketString("00 5a 3a 02 16 01", 65);
-	sendPacketString("00 5a 3a 03 05 01 01", 65);
-	sendPacketString("00 5a 3a 06 0b 01 01 01 02 07", 65);
-	sendPacketString("00 5a 3a 03 05 00 03", 65);
-	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
-	sendPacketString("00 5a 3a 03 05 00 03", 65);
-	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
-	sendPacketString("00 5a 3a 02 16 01", 65);
-	sendPacketString("00 5a 3a 02 16 01", 65);
-	sendPacketString("00 5a 3a 02 16 01", 65);
+	// Unknown, set to Lighting to Mood in Sound Blaster Connect 2.
 }
 
 export function LedNames()
@@ -45,87 +36,12 @@ export function LedPositions()
 
 export function Render()
 {
-	ColorApply();
 	SendColorPalette();
-	sendPacketString("00 5a 3a 03 05 00 03", 65);
-	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
 }
 
 export function Shutdown()
 {
-	ColorApply();
 	SendColorPalette(true);
-	sendPacketString("00 5a 3a 03 05 00 03", 65);
-	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
-	ColorApply();
-	SendColorPalette(true);
-	sendPacketString("00 5a 3a 03 05 00 03", 65);
-	sendPacketString("00 5a 3a 06 0b 00 03 01 02 07", 65);
-}
-
-function ColorApply()
-{
-	let packet = [];
-	packet[0] = 0x00;
-	packet[1] = 0x5a;
-	packet[2] = 0x3a;
-	packet[3] = 0x36;
-	packet[4] = 0x04;
-	packet[5] = 0x00;
-	packet[6] = 0x03;
-	packet[7] = 0x07;
-	packet[8] = 0x00;
-	packet[9] = 0x02;
-	packet[10] = 0x02;
-	packet[11] = 0x02;
-	packet[12] = 0x02;
-	packet[13] = 0x02;
-	packet[14] = 0x02;
-	packet[15] = 0x02;
-	packet[16] = 0x03;
-	packet[17] = 0x03;
-	packet[18] = 0x03;
-	packet[19] = 0x03;
-	packet[20] = 0x03;
-	packet[21] = 0x03;
-	packet[22] = 0x03;
-	packet[23] = 0x04;
-	packet[24] = 0x04;
-	packet[25] = 0x04;
-	packet[26] = 0x04;
-	packet[27] = 0x04;
-	packet[28] = 0x04;
-	packet[29] = 0x04;
-	packet[30] = 0x05;
-	packet[31] = 0x05;
-	packet[32] = 0x05;
-	packet[33] = 0x05;
-	packet[34] = 0x05;
-	packet[35] = 0x05;
-	packet[36] = 0x05;
-	packet[37] = 0x06;
-	packet[38] = 0x06;
-	packet[39] = 0x06;
-	packet[40] = 0x06;
-	packet[41] = 0x06;
-	packet[42] = 0x06;
-	packet[43] = 0x06;
-	packet[44] = 0x07;
-	packet[45] = 0x07;
-	packet[46] = 0x07;
-	packet[47] = 0x07;
-	packet[48] = 0x07;
-	packet[49] = 0x07;
-	packet[50] = 0x07;
-	packet[51] = 0x08;
-	packet[52] = 0x08;
-	packet[53] = 0x08;
-	packet[54] = 0x08;
-	packet[55] = 0x08;
-	packet[56] = 0x08;
-	packet[57] = 0x08;
-
-	device.write(packet, 65);
 }
 
 function SendColorPalette(shutdown = false)
