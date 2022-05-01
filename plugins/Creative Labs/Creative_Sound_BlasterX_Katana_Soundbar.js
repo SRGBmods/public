@@ -22,7 +22,7 @@ let vKeyPositions = [ [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0] ];
 export function Initialize()
 {
 	/* 
-	Remote LED button - any mode on remote when SignalRGB is running if no reaction hardware mode is active, switch to another LED mod.
+	Remote LED button - any mode on remote when SignalRGB is running if no reaction hardware mode is active, switch to another LED mode (push the button again).
 	Using Sound Blaster Connect 2 to set lighting to Mood, or Single (Mood recommended) all other modes will block SignalRGB.
 	*/
 }
