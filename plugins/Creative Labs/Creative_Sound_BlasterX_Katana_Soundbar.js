@@ -3,6 +3,7 @@ export function VendorId() { return 0x041E; }
 export function ProductId() { return 0x3247; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [100, 5]; }
+export function Type() { return "Hid"; }
 export function DefaultPosition(){return [10, 100];}
 export function DefaultScale(){return 2.0;}
 export function ControllableParameters()
@@ -21,7 +22,7 @@ let vKeyPositions = [ [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0] ];
 
 export function Initialize()
 {
-	/* 
+	/*
 	Remote LED button - any mode on remote when SignalRGB is running if no reaction hardware mode is active, switch to another LED mode (push the button again).
 	Using Sound Blaster Connect 2 to set lighting to Mood, or Single (Mood recommended) all other modes will block SignalRGB.
 	*/
@@ -98,19 +99,6 @@ function hexToRgb(hex)
 	colors[2] = parseInt(result[3], 16);
 
 	return colors;
-}
-
-function sendPacketString(string, size)
-{
-	let packet= [];
-	let data = string.split(' ');
-
-	for(let i = 0; i < data.length; i++)
-	{
-		packet[parseInt(i, 16)] =parseInt(data[i], 16);//.toString(16)
-	}
-
-	device.write(packet, size);
 }
 
 export function Validate(endpoint)
