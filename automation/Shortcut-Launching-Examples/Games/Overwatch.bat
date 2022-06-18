@@ -36,7 +36,7 @@ REM
 REM
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Overwatch?-silentlaunch-"
-rem explorer steam://run/578080
+explorer battlenet://Pro
 echo Press any key to return to previous effects
 pause > nul 2> nul
 explorer "signalrgb://layout/apply/%CurrentLayout%?-silentlaunch-"
