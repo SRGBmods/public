@@ -35,7 +35,7 @@ goto layoutsave
 
 :LAYOUTSAVE
 FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "always"') DO set "CurrentLayout=%%B" > nul 2> nul
-goto GameLaunch
+goto applylayout
 
 :GAMELAUNCH
 timeout 2 > nul 2> nul
