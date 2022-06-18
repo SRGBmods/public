@@ -7,12 +7,6 @@ REM ----------------------------------------------------------------------------
 
 IF %RULE% == always (goto saveall)
 IF %RULE% == media (goto savestatic)
-pause
-GOTO EXIT
-
-:EXIT
-echo error
-pause
 
 :SAVEALL
 FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\effects\selected" /v "always"') DO set "CurrentEffect=%%B" > nul 2> nul
