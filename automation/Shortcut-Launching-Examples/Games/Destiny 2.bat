@@ -5,6 +5,23 @@ REM otherwise place keep it at always
 set RULE=always
 REM -------------------------------------------------------------------------------------
 
+:APPLYLAYOUT
+REM -------------------------------------------------------------------------------------
+REM You will need to set the layout you have created for Destiny 2 (Or a generic Game layout)
+REM -------------------------------------------------------------------------------------
+REM
+REM Remember %%20 = a space
+REM Edit the next line for your layout:
+explorer "signalrgb://layout/apply/Destiny%%202?-silentlaunch-"
+
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM --------------------------------Do not edit anything below!--------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+goto gamelaunch
+
 IF %RULE% == always (goto saveall)
 IF %RULE% == media (goto savestatic)
 
@@ -18,22 +35,9 @@ goto layoutsave
 
 :LAYOUTSAVE
 FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "always"') DO set "CurrentLayout=%%B" > nul 2> nul
-goto GameLaunch
+goto applylayout
 
 :GAMELAUNCH
-REM -------------------------------------------------------------------------------------
-REM You will need to set the layout you have created for Destiny 2 (Or a generic Game layout)
-REM -------------------------------------------------------------------------------------
-
-explorer "signalrgb://layout/apply/Destiny%%202?-silentlaunch-"
-
-REM -------------------------------------------------------------------------------------
-
-REM
-REM
-REM Do not edit anything below
-REM
-REM
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Destiny%%202?-silentlaunch-"
 timeout 2 > nul 2> nul
