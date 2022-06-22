@@ -7,15 +7,21 @@ REM ----------------------------------------------------------------------------
 
 :APPLYLAYOUT
 REM -------------------------------------------------------------------------------------
-REM You will need to make sure an Audio Visual Effect is installed
-REM "Ripple%%20Visualizer", "Fire%%20Visualizer", "Rave%%20Visualizer%, "Particle%%20Visualizer",
-REM "Tesla%%20Coil", "Sunset%%20Visualizer", "Sunrise%%20Visualizer", "Sonic%%20Bubbles", "RGBarz",
-REM "Bars%%20Visualizer", or "Pump%%20Up%%20Beats"
+REM You will need to set the layout you have created for the audio visualizers you use
 REM -------------------------------------------------------------------------------------
 REM
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
 explorer "signalrgb://layout/apply/Pump%%20Up%%20Beats?-silentlaunch-"
+
+REM -------------------------------------------------------------------------------------
+REM You will need to make sure an Audio Visual Effect is installed
+REM "Ripple%%20Visualizer", "Fire%%20Visualizer", "Rave%%20Visualizer%, "Particle%%20Visualizer",
+REM "Tesla%%20Coil", "Sunset%%20Visualizer", "Sunrise%%20Visualizer", "Sonic%%20Bubbles", "RGBarz",
+REM "Bars%%20Visualizer", or "Pump%%20Up%%20Beats"
+REM -------------------------------------------------------------------------------------
+timeout 2 > nul 2> nul
+explorer "signalrgb://effect/apply/Pump%%20Up%%20Beats?-silentlaunch-"
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -41,9 +47,6 @@ FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\Whirlw
 goto applylayout
 
 :LAUNCHAPP
-timeout 2 > nul 2> nul
-explorer "signalrgb://effect/apply/Pump%%20Up%%20Beats?-silentlaunch-"
-
 REM Start the program
 start "Plexamp" %localappdata%\Programs\plexamp\Plexamp.exe
 echo Press any key to return to previous effects
