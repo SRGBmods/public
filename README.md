@@ -4,6 +4,8 @@
 
 *Explaination of what this repository contains (directory names listed below):*
 
+**automation:** example files for being able to control SignalRGB via different hardware or software.
+
 **components:** Verified devices connected to aRGB controllers that should go in `%userprofile%\Documents\WhirlwindFX\Components`
 
 **plugins:** Updated Device plugins that should go in `%userprofile%\Documents\WhirlwindFX\Plugins`
