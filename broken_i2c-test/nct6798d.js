@@ -15,7 +15,8 @@ export function ControllableParameters(){
 
 /*
 
-https://github.com/torvalds/linux/blob/master/drivers/hwmon/nct6775.c
+https://elixir.bootlin.com/linux/latest/source/drivers/hwmon/nct6775.c
+https://www.kernel.org/doc/html/latest/hwmon/nct6775.html
 https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/blob/master/LibreHardwareMonitorLib/Hardware/Motherboard/Lpc/Nct677X.cs
 
 const MAX_FAN_COUNT = 7
