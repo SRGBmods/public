@@ -5,12 +5,19 @@
 export function Name() { return "Nuvoton nct6798d"; }
 export function ProductId() { return 0xd428;}
 export function Publisher() { return "WhirlwindFX"; }
+
+export function Type() { return "SMBUS"; }
+
 export function ControllableParameters(){
     return [
         {"property":"SensorCount", "label":"Temperature Sensor Count","type":"number","min":"1", "max":"8","default":"0"},
         {"property":"FanCount", "label":"Fan Count","type":"number","min":"1", "max":"8","default":"0"},
 
         ];
+}
+
+export function Scan(bus) {
+
 }
 
 /*
