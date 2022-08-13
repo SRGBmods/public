@@ -1,6 +1,6 @@
 export function Name() { return "ThermalTake LedBox"; }
 export function VendorId() { return 0x264A; }
-export function ProductId() { return 0x2260; }
+export function ProductId() { return 0x2262; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [1, 1]; }
 export function Type() { return "Hid"; }
