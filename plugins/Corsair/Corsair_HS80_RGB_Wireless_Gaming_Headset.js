@@ -96,7 +96,7 @@ export function Shutdown()
 
 export function Validate(endpoint)
 {
-	return endpoint.interface === 3 && endpoint.usage === 0x0001 && endpoint.usage_page === 0xFF42 && endpoint.collection === 0x0004;
+	return endpoint.interface === 3 && endpoint.usage === 0x0001 && endpoint.usage_page === 0xFF42;
 }
 
 function hexToRgb(hex)
