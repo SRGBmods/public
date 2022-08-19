@@ -31,7 +31,7 @@ export function LedPositions()
 
 function sendColor(shutdown = false)
 {
-  	let mxPxColor;
+	let mxPxColor;
 	let packet = new Array(64).fill(0x00);
 	
 	packet[0] = 0x02;
@@ -62,6 +62,12 @@ function sendColor(shutdown = false)
 
 export function Initialize() 
 {
+	device.set_endpoint(3, 0x0001, 0xFF42);
+	SetSoftwareMode();
+}
+
+function SetSoftwareMode()
+{
 	let packet = new Array(64).fill(0x00);
 	packet[0] = 0x02;
 	packet[1] = 0x09;
@@ -79,8 +85,21 @@ export function Initialize()
 
 export function Render() 
 {
+	readDevice();
+	device.pause(1);
 	sendColor();
-	device.pause(3);
+}
+
+function readDevice()
+{
+	device.set_endpoint(3, 0x0002, 0xFF42);
+	let packet = device.read([0x03], 64, 3);
+	device.set_endpoint(3, 0x0001, 0xFF42);
+	if(packet[0] == 0x03 && packet[1] == 0x01 && packet[2] == 0x01 && packet[3] == 0x10 && packet[4] == 0x00 && packet[5] == 0x02)
+	{
+		device.log("Headset turned ON! Sending Init!");
+		SetSoftwareMode();
+	}
 }
 
 export function Shutdown() 
@@ -96,7 +115,7 @@ export function Shutdown()
 
 export function Validate(endpoint)
 {
-	return endpoint.interface === 3 && endpoint.usage === 0x0001 && endpoint.usage_page === 0xFF42;
+	return endpoint.interface === 3 && (endpoint.usage === 0x0001 || endpoint.usage === 0x0002) && endpoint.usage_page === 0xFF42;
 }
 
 function hexToRgb(hex)
