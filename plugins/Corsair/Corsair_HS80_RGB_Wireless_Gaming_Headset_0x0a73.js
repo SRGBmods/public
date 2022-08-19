@@ -86,7 +86,7 @@ function SetSoftwareMode()
 	packet[3] = 0x02;
 	packet[4] = 0x00;
 	packet[5] = 0xE8;
-	packet[5] = 0x03;
+	packet[6] = 0x03;
 	device.write(packet, 64);
 }
 
