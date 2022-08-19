@@ -76,6 +76,13 @@ export function Initialize()
 	packet[4] = 0x01;
 	packet[5] = 0x00;
 	device.write(packet, 64);
+	
+	packet[2] = 0x01;
+	packet[3] = 0x02;
+	packet[4] = 0x00;
+	packet[5] = 0xE8;
+	packet[5] = 0x03;
+	device.write(packet, 64);
 }
 
 export function Render() 
