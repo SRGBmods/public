@@ -1,4 +1,4 @@
-@echo on
+@echo off
 REM Do not change the following line (this launches the batch script minimized):
 REM if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
 REM
@@ -10,7 +10,7 @@ REM ----------------------------------------------------------------------------
 
 :APPLYLAYOUT
 REM -------------------------------------------------------------------------------------
-REM You will need to set the layout you have created for DOOM Eternal(Or a generic Game layout)
+REM You will need to set the layout you have created for Minecraft (Or a generic Game layout)
 REM -------------------------------------------------------------------------------------
 REM
 REM Remember %%20 = a space
@@ -23,7 +23,6 @@ REM ----------------------------------------------------------------------------
 REM --------------------------------Do not edit anything below!--------------------------
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
-goto gamelaunch
 
 IF %RULE% == always (goto saveall)
 IF %RULE% == media (goto savestatic)
@@ -37,12 +36,12 @@ FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\Whirlw
 goto layoutsave
 
 :LAYOUTSAVE
-FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "always"') DO set "CurrentLayout=%%B" > nul 2> nul
-goto applylayout
+FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "currentLayout"') DO set "CurrentLayout=%%B" > nul 2> nul
+goto gamelaunch
 
 :GAMELAUNCH
 timeout 2 > nul 2> nul
-explorer "signalrgb://effect/apply/Minecraft?-silentlaunch-"
+explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
 explorer %appdata%\.minecraft\TLauncher.exe
 goto exitcheck
 
@@ -53,8 +52,7 @@ w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck
 )
 
+:removemelater
 explorer "signalrgb://layout/apply/%CurrentLayout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/%CurrentEffect%?-silentlaunch-"
-pause
-exit
