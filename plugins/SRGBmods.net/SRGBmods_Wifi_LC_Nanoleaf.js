@@ -2,13 +2,14 @@ export function Name() { return "SRGBmods Wifi LC - Nanoleaf"; }
 export function VendorId() { return 0x16D0; }
 export function ProductId() { return 0x1176; }
 export function Publisher() { return "FeuerSturm"; }
+export function Documentation() { return "gettingstarted/srgbmods-net-info"; }
 export function Size() { return [1,1]; }
 export function DefaultPosition(){return [0,0]}
 export function DefaultScale(){return 1.0}
 export function Type() { return "Hid"; }
 export function SupportsSubdevices(){ return true; }
 export function DefaultComponentBrand() { return "Nanoleaf"}
-export function ControllableParameters(){
+export function ControllableParameters(){
 	return [
 		{"property":"UpdateRate", "label":"Update rate", "type":"combobox", "values":["10fps","30fps"], "default":"10fps", "tooltip":"Not all Nanoleaf panels support more than 10fps!"},
 		{"property":"shutdownColor", "label":"Shutdown Color","min":"0","max":"360","type":"color","default":"000000"},

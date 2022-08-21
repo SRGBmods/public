@@ -76,6 +76,13 @@ export function Initialize()
 	packet[4] = 0x01;
 	packet[5] = 0x00;
 	device.write(packet, 64);
+	
+	packet[2] = 0x01;
+	packet[3] = 0x02;
+	packet[4] = 0x00;
+	packet[5] = 0xE8;
+	packet[6] = 0x03;
+	device.write(packet, 64);
 }
 
 export function Render() 
@@ -97,7 +104,7 @@ export function Shutdown()
 
 export function Validate(endpoint)
 {
-	return endpoint.interface === 3 && endpoint.usage === 0x0001 && endpoint.usage_page === 0xFF42 && endpoint.collection === 0x0004;
+	return endpoint.interface === 3 && endpoint.usage === 0x0001 && endpoint.usage_page === 0xFF42;
 }
 
 function hexToRgb(hex)
