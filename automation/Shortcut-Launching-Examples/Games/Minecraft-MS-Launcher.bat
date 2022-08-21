@@ -13,7 +13,7 @@ REM If you are using the "while media is playing, show" rule, please change RULE
 REM otherwise place keep it at always
 set RULE=always
 
-REM You will need to set the layout you have created for Minecraft (Or a generic Game layout)
+REM You will need to set the layout you have created for the game.
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
 set LAYOUT=Minecraft

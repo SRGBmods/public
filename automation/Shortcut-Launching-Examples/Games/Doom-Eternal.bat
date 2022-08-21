@@ -1,21 +1,22 @@
 @echo off
 REM Do not change the following line (this launches the batch script minimized):
 if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
-REM
+
 REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -----------------------Make sure to update RULE and LAYOUT!--------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+
 REM If you are using the "while media is playing, show" rule, please change RULE=media
 REM otherwise place keep it at always
 set RULE=always
-REM -------------------------------------------------------------------------------------
 
-:APPLYLAYOUT
-REM -------------------------------------------------------------------------------------
-REM You will need to set the layout you have created for DOOM Eternal (Or a generic Game layout)
-REM -------------------------------------------------------------------------------------
-REM
+REM You will need to set the layout you have created for the game.
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
-explorer "signalrgb://layout/apply/DOOM%%20Eternal?-silentlaunch-"
+set LAYOUT=Doom%%20Eternal
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -36,10 +37,11 @@ FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\Whirlw
 goto layoutsave
 
 :LAYOUTSAVE
-FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "always"') DO set "CurrentLayout=%%B" > nul 2> nul
+FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "currentLayout"') DO set "CurrentLayout=%%B" > nul 2> nul
 goto gamelaunch
 
 :GAMELAUNCH
+explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/DOOM%%20Eternal?-silentlaunch-"
 explorer steam://run/782330

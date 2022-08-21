@@ -1,21 +1,22 @@
 @echo off
 REM Do not change the following line (this launches the batch script minimized):
 if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
-REM
+
 REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -----------------------Make sure to update RULE and LAYOUT!--------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+
 REM If you are using the "while media is playing, show" rule, please change RULE=media
 REM otherwise place keep it at always
 set RULE=always
-REM -------------------------------------------------------------------------------------
 
-:APPLYLAYOUT
-REM -------------------------------------------------------------------------------------
-REM You will need to set the layout you have created for PUBG (Or a generic Game layout)
-REM -------------------------------------------------------------------------------------
-REM
+REM You will need to set the layout you have created for the game.
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
-explorer "signalrgb://layout/apply/PUBG?-silentlaunch-"
+set LAYOUT=PUBG
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -23,7 +24,6 @@ REM ----------------------------------------------------------------------------
 REM --------------------------------Do not edit anything below!--------------------------
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
-goto gamelaunch
 
 IF %RULE% == always (goto saveall)
 IF %RULE% == media (goto savestatic)
@@ -37,8 +37,8 @@ FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\Whirlw
 goto layoutsave
 
 :LAYOUTSAVE
-FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "always"') DO set "CurrentLayout=%%B" > nul 2> nul
-goto applylayout
+FOR /F "skip=2 tokens=2,*" %%A IN ('reg query "HKEY_CURRENT_USER\SOFTWARE\WhirlwindFX\SignalRgb\layouts" /v "currentLayout"') DO set "CurrentLayout=%%B" > nul 2> nul
+goto gamelaunch
 
 :GAMELAUNCH
 timeout 2 > nul 2> nul
@@ -47,7 +47,8 @@ explorer steam://run/578080
 goto exitcheck
 
 :exitcheck
-timeout 20 > nul 2> nul
+explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
+timeout 2 > nul 2> nul
 tasklist /fi "imagename eq TslGame.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck
