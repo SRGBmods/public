@@ -44,7 +44,7 @@ goto applylayout
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft?-silentlaunch-"
 for /f tokens^=2^ delims^=^" %%i in ('reg query HKEY_CLASSES_ROOT\jarfile\shell\open\command /ve') do set JAVAW_PATH=%%i
-start "Minecraft Java Edition" /D %%appdata%%\.minecraft\bin %%JAVAW_PATH%%\javaw -Xms512m -Xmx1g -Djava.library.path=natives/ -cp "minecraft.jar;lwjgl.jar;lwjgl_util.jar" net.minecraft.client.Minecraft
+start "Minecraft Java Edition" /D "%appdata%\.minecraft\bin" "%JAVAW_PATH%\javaw -Xms512m -Xmx1g -Djava.library.path=natives/ -cp 'minecraft.jar;lwjgl.jar;lwjgl_util.jar' net.minecraft.client.Minecraft"
 goto exitcheck
 
 :exitcheck
