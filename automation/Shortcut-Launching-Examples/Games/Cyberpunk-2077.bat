@@ -39,9 +39,17 @@ goto applylayout
 
 :GAMELAUNCH
 timeout 2 > nul 2> nul
+explorer "signalrgb://effect/apply/Cyberpunk%%202077?-silentlaunch-"
 explorer steam://run/1091500
-echo Press any key to return to previous effects
-pause > nul 2> nul
+goto exitcheck
+
+:exitcheck
+timeout 20 > nul 2> nul
+tasklist /fi "imagename eq Cyberpunk2077.exe"|find /i "=========================" >nul 2>nul &&(
+w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
+goto :exitcheck
+)
+
 explorer "signalrgb://layout/apply/%CurrentLayout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/%CurrentEffect%?-silentlaunch-" 
