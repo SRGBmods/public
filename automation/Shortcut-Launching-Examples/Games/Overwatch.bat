@@ -1,4 +1,7 @@
 @echo off
+REM Do not change the following line (this launches the batch script minimized):
+if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
+REM
 REM -------------------------------------------------------------------------------------
 REM If you are using the "while media is playing, show" rule, please change RULE=media
 REM otherwise place keep it at always
@@ -52,4 +55,5 @@ goto :exitcheck
 
 explorer "signalrgb://layout/apply/%CurrentLayout%?-silentlaunch-"
 timeout 2 > nul 2> nul
-explorer "signalrgb://effect/apply/%CurrentEffect%?-silentlaunch-" 
+explorer "signalrgb://effect/apply/%CurrentEffect%?-silentlaunch-"
+exit
