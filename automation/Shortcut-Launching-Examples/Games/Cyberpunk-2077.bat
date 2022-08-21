@@ -10,7 +10,7 @@ REM ----------------------------------------------------------------------------
 
 :APPLYLAYOUT
 REM -------------------------------------------------------------------------------------
-REM You will need to set the layout you have created for DOOM Eternal(Or a generic Game layout)
+REM You will need to set the layout you have created for Cyberpunk (Or a generic Game layout)
 REM -------------------------------------------------------------------------------------
 REM
 REM Remember %%20 = a space
