@@ -44,13 +44,13 @@ goto gamelaunch
 explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
-for /f tokens^=2^ delims^=^" %%i in ('reg query HKEY_CLASSES_ROOT\jarfile\shell\open\command /ve') do set JAVAW_PATH=%%i
-start "Minecraft Java Edition" /D "%appdata%\.minecraft\bin" "%JAVAW_PATH% -Xms512m -Xmx1g -Djava.library.path=natives/ -cp '%appdata%\.minecraft\bin\minecraft.jar;%appdata%\.minecraft\bin\lwjgl.jar;%appdata%\.minecraft\bin\lwjgl_util.jar' net.minecraft.client.Minecraft"
+rem explorer "C:\Program Files\WindowsApps\Microsoft.429712D64EC6_1.1.21.0_x64__8wekyb3d8bbwe\Minecraft.exe"
+explorer "shell:AppsFolder\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App"
 goto exitcheck
 
 :exitcheck
 timeout 20 > nul 2> nul
-tasklist /fi "imagename eq javaw.exe"|find /i "=========================" >nul 2>nul &&(
+tasklist /fi "imagename eq Minecraft.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck
 )
