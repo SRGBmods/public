@@ -43,7 +43,7 @@ goto gamelaunch
 :GAMELAUNCH
 explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
-explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition%%20UW?-silentlaunch-"
+explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
 explorer %appdata%\.minecraft\TLauncher.exe
 goto exitcheck
 
