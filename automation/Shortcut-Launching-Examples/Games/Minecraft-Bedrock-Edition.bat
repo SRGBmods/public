@@ -50,7 +50,7 @@ explorer "shell:AppsFolder\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App"
 goto exitcheck
 
 :exitcheck
-timeout 20 > nul 2> nul
+timeout 2 > nul 2> nul
 tasklist /fi "imagename eq Minecraft.Windows.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck
