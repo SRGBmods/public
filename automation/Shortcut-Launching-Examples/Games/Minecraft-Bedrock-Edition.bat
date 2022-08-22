@@ -45,7 +45,7 @@ explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition%%20UW?-silentlaunch-"
 set "x=|dir %LocalAppData%\Packages /b | findstr packageName" & set "y=!App" & set "z=%x%%y%" & echo.%z%
-explorer "shell:AppsFolder\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App"
+explorer "minecraft://"
 goto exitcheck
 
 :exitcheck
