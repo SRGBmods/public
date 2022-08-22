@@ -1,6 +1,6 @@
-@echo off
+@echo on
 REM Do not change the following line (this launches the batch script minimized):
-if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
+REM if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -44,11 +44,8 @@ goto gamelaunch
 explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
-SET p="C:/Program Files/WindowsApps"
-SET a=Minecraft
-for /D %%x in (%a%*) do if not defined f set "f=%%x"
-SET pa=%p%%f%
-explorer %pa%\Minecraft.Windows.exe
+set "x=|dir %LocalAppData%\Packages /b | findstr packageName" & set "y=!App" & set "z=%x%%y%" & echo.%z%
+explorer "shell:AppsFolder\Microsoft.4297127D64EC6_8wekyb3d8bbwe!Minecraft"
 goto exitcheck
 
 :exitcheck
