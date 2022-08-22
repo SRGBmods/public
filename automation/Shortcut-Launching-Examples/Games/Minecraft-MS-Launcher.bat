@@ -16,7 +16,7 @@ set RULE=always
 REM You will need to set the layout you have created for the game.
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
-set LAYOUT=Screen
+set LAYOUT=Minecraft
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -44,8 +44,7 @@ goto gamelaunch
 explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
-rem explorer "C:\Program Files\WindowsApps\Microsoft.429712D64EC6_1.1.21.0_x64__8wekyb3d8bbwe\Minecraft.exe"
-explorer "shell:AppsFolder\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App"
+explorer "shell:AppsFolder\Microsoft.4297127D64EC6_8wekyb3d8bbwe!Minecraft"
 goto exitcheck
 
 :exitcheck
