@@ -45,10 +45,10 @@ explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
 SET p="C:/Program Files/WindowsApps"
-SET a=%1
+SET a=Minecraft
 for /D %%x in (%a%*) do if not defined f set "f=%%x"
 SET pa=%p%%f%
-Minecraft.Windows.exe
+explorer %pa%\Minecraft.Windows.exe
 goto exitcheck
 
 :exitcheck
