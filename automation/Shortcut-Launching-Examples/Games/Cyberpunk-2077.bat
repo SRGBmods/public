@@ -52,7 +52,7 @@ timeout 20 > nul 2> nul
 tasklist /fi "imagename eq Cyberpunk2077.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto exitcheck
-}
+)
 
 explorer "signalrgb://layout/apply/%CurrentLayout%?-silentlaunch-"
 timeout 2 > nul 2> nul
