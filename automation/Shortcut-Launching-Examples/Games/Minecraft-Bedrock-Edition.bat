@@ -1,6 +1,6 @@
-@echo on
+@echo off
 REM Do not change the following line (this launches the batch script minimized):
-REM if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
+if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ set RULE=always
 REM You will need to set the layout you have created for the game.
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
-set LAYOUT=Minecraft
+set LAYOUT=Screen
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -43,11 +43,10 @@ goto gamelaunch
 :GAMELAUNCH
 explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
-explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
+explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition%%20UW?-silentlaunch-"
 set "x=|dir %LocalAppData%\Packages /b | findstr packageName" & set "y=!App" & set "z=%x%%y%" & echo.%z%
 rem explorer "shell:AppsFolder\Microsoft.4297127D64EC6_8wekyb3d8bbwe!Minecraft"
 explorer "shell:AppsFolder\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App"
-pause
 goto exitcheck
 
 :exitcheck
