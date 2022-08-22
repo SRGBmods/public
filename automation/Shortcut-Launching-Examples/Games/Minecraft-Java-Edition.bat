@@ -1,21 +1,22 @@
 @echo off
 REM Do not change the following line (this launches the batch script minimized):
-REM if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
-REM
+if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
+
 REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+REM -----------------------Make sure to update RULE and LAYOUT!--------------------------
+REM -------------------------------------------------------------------------------------
+REM -------------------------------------------------------------------------------------
+
 REM If you are using the "while media is playing, show" rule, please change RULE=media
 REM otherwise place keep it at always
 set RULE=always
-REM -------------------------------------------------------------------------------------
 
-:APPLYLAYOUT
-REM -------------------------------------------------------------------------------------
-REM You will need to set the layout you have created for Minecraft (Or a generic Game layout)
-REM -------------------------------------------------------------------------------------
-REM
+REM You will need to set the layout you have created for the game.
 REM Remember %%20 = a space
 REM Edit the next line for your layout:
-explorer "signalrgb://layout/apply/Minecraft?-silentlaunch-"
+set LAYOUT=Minecraft
 
 REM -------------------------------------------------------------------------------------
 REM -------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
 for /f tokens^=2^ delims^=^" %%i in ('reg query HKEY_CLASSES_ROOT\jarfile\shell\open\command /ve') do set JAVAW_PATH=%%i
-start "Minecraft Java Edition" /D "%appdata%\.minecraft\bin" "%JAVAW_PATH% -Xms512m -Xmx1g -Djava.library.path=natives/ -cp 'minecraft.jar;lwjgl.jar;lwjgl_util.jar' net.minecraft.client.Minecraft"
+start "Minecraft Java Edition" /D "%appdata%\.minecraft\bin" "%JAVAW_PATH% -Xms512m -Xmx1g -Djava.library.path=natives/ -cp '%appdata%\.minecraft\bin\minecraft.jar;%appdata%\.minecraft\bin\lwjgl.jar;%appdata%\.minecraft\bin\lwjgl_util.jar' net.minecraft.client.Minecraft"
 goto exitcheck
 
 :exitcheck
