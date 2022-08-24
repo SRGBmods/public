@@ -8,12 +8,18 @@ export function DefaultScale(){return 25.0}
 export function Type() { return "Hid"; }
 export function ControllableParameters() {
 	return [
-		{"property":"shutdownColor", "group":"lighting", "label":"Shutdown Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
 		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
-		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
+		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"#009bde"},
+		{"property":"micLedMode", "group":"lighting", "label":"Microphone LED Mode", "type":"combobox", "values":["Effect", "MicState"], "default":"Effect"},
+		{"property":"micLedDefState", "group":"lighting", "label":"Microphone Default State", "type":"combobox", "values":["OFF", "ON"], "default":"OFF"},
+		{"property":"micColorOn", "group":"lighting", "label":"Microphone Color ON", "min":"0", "max":"360", "type":"color", "default":"#33cc33"},
+		{"property":"micColorOff", "group":"lighting", "label":"Microphone Color OFF", "min":"0", "max":"360", "type":"color", "default":"#cc0000"},
 	];
 }
 export function Documentation(){ return "troubleshooting/corsair"; }
+
+let headsetMode;
+let micState;
 
 let vLedNames = ["Logo", "Mic"];
 
@@ -35,24 +41,31 @@ function sendColor(shutdown = false)
 	let packet = new Array(64).fill(0x00);
 	
 	packet[0] = 0x02;
-	packet[1] = 0x09;
+	packet[1] = headsetMode;
 	packet[2] = 0x06;
 	packet[4] = 0x09;
 
 	for(let iIdx = 0; iIdx < vLedPositions.length; iIdx++)
 	{
-		let iPxX = vLedPositions[iIdx][0];
-		let iPxY = vLedPositions[iIdx][1];
-
-		if (LightingMode === "Forced")
+		if(iIdx == 1 && micLedMode == "MicState")
 		{
-			mxPxColor = hexToRgb(forcedColor);
+			mxPxColor = hexToRgb(micState == 0 ? micColorOff : micColorOn);
 		}
 		else
 		{
-			mxPxColor = device.color(iPxX, iPxY);
-		}
+			let iPxX = vLedPositions[iIdx][0];
+			let iPxY = vLedPositions[iIdx][1];
 
+			if (LightingMode === "Forced")
+			{
+				mxPxColor = hexToRgb(forcedColor);
+			}
+			else
+			{
+				mxPxColor = device.color(iPxX, iPxY);
+			}
+		}
+			
 		packet[(iIdx*2)+8] = mxPxColor[0];
 		packet[(iIdx*2)+11] = mxPxColor[1];
 		packet[(iIdx*2)+14] = mxPxColor[2];
@@ -62,15 +75,17 @@ function sendColor(shutdown = false)
 
 export function Initialize() 
 {
+	headsetMode = ProductId() == 0x0a6b ? 0x09 : 0x08;
 	device.set_endpoint(3, 0x0001, 0xFF42);
 	SetSoftwareMode();
 }
 
 function SetSoftwareMode()
 {
+	micState = micLedDefState == "ON" ? 1 : 0;
 	let packet = new Array(64).fill(0x00);
 	packet[0] = 0x02;
-	packet[1] = 0x09;
+	packet[1] = headsetMode;
 	packet[2] = 0x01;
 	packet[3] = 0x03;
 	packet[5] = 0x02;
@@ -100,12 +115,19 @@ export function Render()
 function readDevice()
 {
 	device.set_endpoint(3, 0x0002, 0xFF42);
-	let packet = device.read([0x03], 64, 3);
+	let packet = device.read([0x00], 64, 3);
 	device.set_endpoint(3, 0x0001, 0xFF42);
 	if(packet[0] == 0x03 && packet[1] == 0x01 && packet[2] == 0x01 && packet[3] == 0x10 && packet[4] == 0x00 && packet[5] == 0x02)
 	{
-		device.log("Headset turned ON! Sending Init!");
 		SetSoftwareMode();
+	}
+	if(packet[0] == 0x03 && packet[2] == 0x01 && packet[3] == 0xA6 && packet[4] == 0x00 && packet[5] == 0x00)
+	{
+		micState = 1;
+	}
+	if(packet[0] == 0x03 && packet[2] == 0x01 && packet[3] == 0xA6 && packet[4] == 0x00 && packet[5] == 0x01)
+	{
+		micState = 0;
 	}
 }
 
@@ -113,7 +135,7 @@ export function Shutdown()
 {
 	let packet = new Array(64).fill(0x00);
 	packet[0] = 0x02;
-	packet[1] = 0x09;
+	packet[1] = headsetMode;
 	packet[2] = 0x01;
 	packet[3] = 0x03;
 	packet[5] = 0x01;
