@@ -2,6 +2,7 @@ export function Name() { return "Aqua Computer Farbwerk Nano"; }
 export function VendorId() { return 0x0c70;}
 export function ProductId() { return 0xf00f;}
 export function Publisher() { return "FeuerSturm"; }
+export function Documentation(){ return "troubleshooting/aqua-computer"; }
 export function Size() { return [1, 1]; }
 export function Type() { return "rawusb"; }
 export function DefaultPosition(){return [1, 1];}

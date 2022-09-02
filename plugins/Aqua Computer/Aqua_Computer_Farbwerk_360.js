@@ -2,6 +2,7 @@ export function Name() { return "Aqua Computer Farbwerk 360"; }
 export function VendorId() { return 0x0c70;}
 export function ProductId() { return 0xf010;}
 export function Publisher() { return "FeuerSturm"; }
+export function Documentation(){ return "troubleshooting/aqua-computer"; }
 export function Size() { return [1, 1]; }
 export function Type() { return "rawusb"; }
 export function DefaultPosition(){return [1, 1];}
@@ -53,13 +54,11 @@ export function Initialize()
 
 export function Shutdown()
 {
-	SendChannel(0, true);
-	device.pause(1);
-	SendChannel(1, true);
-	device.pause(1);
-	SendChannel(2, true);
-	device.pause(1);
-	SendChannel(3, true);
+	for(let i = 0; i < ChannelArray.length; i++)
+	{
+		SendChannel(i, true);
+		device.pause(1);
+	}
 }
 
 function SendChannel(Channel, shutdown = false)
@@ -112,14 +111,11 @@ function SendChannel(Channel, shutdown = false)
 
 export function Render()
 {
-	SendChannel(0);
-	device.pause(1);
-	SendChannel(1);
-	device.pause(1);
-	SendChannel(2);
-	device.pause(1);
-	SendChannel(3);
-	device.pause(1);
+	for(let i = 0; i < ChannelArray.length; i++)
+	{
+		SendChannel(i);
+		device.pause(1);
+	}
 }
 
 export function Image()
