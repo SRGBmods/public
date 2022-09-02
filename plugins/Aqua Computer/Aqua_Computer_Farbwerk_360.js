@@ -99,7 +99,7 @@ function SendChannel(Channel, shutdown = false)
 
 	for(let LedIdx = 0; LedIdx < ChannelLedCount; LedIdx++)
 	{
-		offset = 2 + LedIdx + shiftPackets;
+		offset = (LedIdx == 0 ? -1 : 2) + LedIdx + shiftPackets;
 		packet[currPacket] = RGBData[currPacket-offset];
 		packet[currPacket+1] = RGBData[currPacket+1-offset];
 		packet[currPacket+2] = RGBData[currPacket+2-offset];
