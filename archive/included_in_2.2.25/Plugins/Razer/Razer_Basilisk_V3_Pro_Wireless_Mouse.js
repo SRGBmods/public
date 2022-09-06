@@ -13,6 +13,8 @@ export function ControllableParameters()
 		{"property":"shutdownColor", "group":"lighting", "label":"Shutdown Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
 		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
+		{"property":"SleepMode", "group":"lighting", "label":"Wireless Power Saving","step":"60", "type":"number","min":"60", "max":"900","default":"300", "tooltip":"Enter sleep mode if idle for (seconds)"},
+		{"property":"LowPower", "group":"lighting", "label":"Low Power Mode","step":"5", "type":"number","min":"5", "max":"100","default":"30", "tooltip":"When wireless, enter Low Power Mode if the battery level is below (%)"},
 		{"property":"DpiControl", "group":"mouse", "label":"Enable Dpi Control", "type":"boolean", "default":"false"},
 		{"property":"DPIRollover", "group":"mouse", "label":"DPI Stage Rollover","type":"boolean","default": "false"},
 		{"property":"OnboardDPI", "group":"mouse", "label":"Save DPI to Onboard Storage","type":"boolean","default": "false"},
@@ -25,6 +27,9 @@ export function ControllableParameters()
 		{"property":"pollingRate", "group":"mouse", "label":"Polling Rate","type":"combobox", "values":[ "1000","500", "100" ], "default":"1000"},
 		{"property":"liftOffDistance", "group":"mouse", "label":"Lift Off Distance (MM)","step":"1", "type":"number","min":"1", "max":"3","default":"1"},
 		{"property":"asymmetricLOD", "group":"mouse", "label":"Asymmetric Lift Off Distance", "type":"boolean", "default":"false"},
+		{"property":"ScrollMode", "group":"mouse", "label":"Freespin Scrolling", "type":"boolean", "default":"false"},
+		{"property":"ScrollAccel", "group":"mouse", "label":"Scroll Acceleration", "type":"boolean", "default":"true"},
+		{"property":"SmartReel", "group":"mouse", "label":"Smart-Reel", "type":"boolean", "default":"false"},
 	];
 }
 
@@ -57,8 +62,13 @@ export function Initialize()
 		DPIStageControl();
 	}
 
+	setDeviceLowPower();
+    setDeviceSleepMode();
 	setDevicePollingRate();
 	setDeviceLOD();
+	setDeviceScrollMode();
+	setDeviceScrollAccel();
+	setDeviceSmartReel();	
 }
 
 export function Render() 
@@ -154,6 +164,31 @@ export function onliftOffDistanceChanged()
 	setDeviceLOD();
 }
 
+export function onScrollModeChanged()
+{
+	setDeviceScrollMode();
+}
+
+export function onScrollAccelChanged()
+{
+	setDeviceScrollAccel();
+}
+
+export function onSmartReelChanged()
+{
+	setDeviceSmartReel();
+}
+
+export function onSleepModeChanged()
+{
+	setDeviceSleepMode();
+}
+
+export function onLowPowerChanged()
+{
+	setDeviceLowPower();
+}
+
 function packetSend(packet,length) //Wrapper for always including our CRC
 {
 	let packetToSend = packet;
@@ -235,6 +270,47 @@ function setDeviceLOD()
 	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x04, 0x0b, 0x0b, 0x00, 0x04, (asymmetricLOD ? 0x02 : 0x01), (liftOffDistance - 1)];
 	packetSend(packet,91);
 }
+
+function setDeviceScrollMode()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x02, 0x14, 0x01, (ScrollMode ? 0x01 : 0x00)];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
+function setDeviceScrollAccel()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x02, 0x16, 0x01, (ScrollAccel ? 0x01 : 0x00)];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
+function setDeviceSmartReel()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x02, 0x17, 0x01, (SmartReel ? 0x01 : 0x00)];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
+function setDeviceSleepMode()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x07, 0x03, Math.floor(SleepMode/256), SleepMode%256];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
+function setDeviceLowPower()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x01, 0x07, 0x01, Math.floor(LowPower*255/100)];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
 
 function setDeviceColor(shutdown = false)
 {
@@ -353,7 +429,7 @@ function setDeviceDPI(stage)
 function detectInputs()
 {
 	device.set_endpoint(1,0x0000,0x0001);
-	let packet = device.read([0x00],16);
+	let packet = device.read([0x00],16,3);
 	processInputs(packet);
 	device.set_endpoint(0,0x0002,0x0001);
 }

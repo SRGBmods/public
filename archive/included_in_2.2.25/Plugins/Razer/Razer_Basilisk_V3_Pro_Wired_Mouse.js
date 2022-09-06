@@ -3,7 +3,7 @@ export function VendorId() { return 0x1532; }
 export function Documentation(){ return "troubleshooting/razer"; }
 export function ProductId() { return 0x00aa; }
 export function Publisher() { return "vermis"; }
-export function Size() { return [6, 6]; }
+export function Size() { return [6, 7]; }
 export function Type() { return "Hid"; }
 export function DefaultPosition() {return [225, 120]; }
 export function DefaultScale(){return 8.0;}
@@ -25,6 +25,9 @@ export function ControllableParameters()
 		{"property":"pollingRate", "group":"mouse", "label":"Polling Rate","type":"combobox", "values":[ "1000","500", "100" ], "default":"1000"},
 		{"property":"liftOffDistance", "group":"mouse", "label":"Lift Off Distance (MM)","step":"1", "type":"number","min":"1", "max":"3","default":"1"},
 		{"property":"asymmetricLOD", "group":"mouse", "label":"Asymmetric Lift Off Distance", "type":"boolean", "default":"false"},
+		{"property":"ScrollMode", "group":"mouse", "label":"Freespin Scrolling", "type":"boolean", "default":"false"},
+		{"property":"ScrollAccel", "group":"mouse", "label":"Scroll Acceleration", "type":"boolean", "default":"true"},
+		{"property":"SmartReel", "group":"mouse", "label":"Smart-Reel", "type":"boolean", "default":"false"},
 	];
 }
 
@@ -59,6 +62,9 @@ export function Initialize()
 
 	setDevicePollingRate();
 	setDeviceLOD();
+	setDeviceScrollMode();
+	setDeviceScrollAccel();
+	setDeviceSmartReel();	
 }
 
 export function Render() 
@@ -154,6 +160,21 @@ export function onliftOffDistanceChanged()
 	setDeviceLOD();
 }
 
+export function onScrollModeChanged()
+{
+	setDeviceScrollMode();
+}
+
+export function onScrollAccelChanged()
+{
+	setDeviceScrollAccel();
+}
+
+export function onSmartReelChanged()
+{
+	setDeviceSmartReel();
+}
+
 function packetSend(packet,length) //Wrapper for always including our CRC
 {
 	let packetToSend = packet;
@@ -233,6 +254,30 @@ function setDevicePollingRate()
 function setDeviceLOD()
 {
 	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x04, 0x0b, 0x0b, 0x00, 0x04, (asymmetricLOD ? 0x02 : 0x01), (liftOffDistance - 1)];
+	packetSend(packet,91);
+}
+
+function setDeviceScrollMode()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x02, 0x14, 0x01, (ScrollMode ? 0x01 : 0x00)];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
+function setDeviceScrollAccel()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x02, 0x16, 0x01, (ScrollAccel ? 0x01 : 0x00)];
+	packetSend(packet,91);
+	device.pause(1);
+	packetSend(packet,91);
+}
+
+function setDeviceSmartReel()
+{
+	let packet = [0x00, 0x00, transactionID, 0x00, 0x00, 0x00, 0x02, 0x02, 0x17, 0x01, (SmartReel ? 0x01 : 0x00)];
+	packetSend(packet,91);
+	device.pause(1);
 	packetSend(packet,91);
 }
 
@@ -353,7 +398,7 @@ function setDeviceDPI(stage)
 function detectInputs()
 {
 	device.set_endpoint(1,0x0000,0x0001);
-	let packet = device.read([0x00],16);
+	let packet = device.read([0x00],16,3);
 	processInputs(packet);
 	device.set_endpoint(0,0x0002,0x0001);
 }
