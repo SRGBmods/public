@@ -38,6 +38,7 @@ export function LedPositions()
 export function Initialize()
 {
 	lastButtonRGB = Array.from(Array(32), () => Array(3).fill(0));
+	setBrightness();
 }
 
 export function Render()
@@ -46,6 +47,11 @@ export function Render()
 }
 
 export function onBrightnessChanged()
+{
+	setBrightness();
+}
+
+function setBrightness()
 {
 	let packet = [];
 	packet[0] = 0x03;
