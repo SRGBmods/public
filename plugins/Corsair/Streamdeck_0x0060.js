@@ -13,6 +13,7 @@ export function ControllableParameters(){
 		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
 		{"property":"buttontimeout", "group":"", "label":"Button Press Timeout", "step":"1", "type":"number", "min":"1", "max":"50", "default":"5"},
+		{"property":"hwbrightness", "group":"", "label":"Hardware Brightness", "step":"1", "type":"number", "min":"1", "max":"100", "default":"25"},
 	];
 }
 
@@ -46,7 +47,7 @@ export function Render()
 	grabColors();
 }
 
-export function onBrightnessChanged()
+export function onhwbrightnessChanged()
 {
 	setBrightness();
 }
@@ -59,7 +60,7 @@ function setBrightness()
 	packet[2] = 0xaa;
 	packet[3] = 0xd1;
 	packet[4] = 0x01;
-	packet[5] = device.getBrightness();
+	packet[5] = hwbrightness;
 	device.send_report(packet, 8191);
 }
 
