@@ -44,12 +44,7 @@ export function Render()
 	grabColors();
 }
 
-export function onbrightnessChanged()
-{
-	setBrightness();
-}
-
-function setBrightness()
+export function onBrightnessChanged()
 {
 	let packet = [];
 	packet[0] = 0x05;
@@ -57,7 +52,7 @@ function setBrightness()
 	packet[2] = 0xaa;
 	packet[3] = 0xd1;
 	packet[4] = 0x01;
-	packet[5] = brightness;
+	packet[5] = device.getBrightness();
 	device.send_report(packet, 8191);
 }
 

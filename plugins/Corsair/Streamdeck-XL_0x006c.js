@@ -12,7 +12,6 @@ export function ControllableParameters()
 		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
 		{"property":"buttontimeout", "group":"", "label":"Button Press Timeout", "step":"1", "type":"number", "min":"1", "max":"50", "default":"5"},
-		{"property":"brightness", "group":"", "label":"Screen Brightness", "step":"1", "type":"number", "min":"1", "max":"100", "default":"50"},
 	];
 }
 
@@ -46,17 +45,12 @@ export function Render()
 	colorgrabber();
 }
 
-export function onbrightnessChanged()
-{
-	setBrightness();
-}
-
-function setBrightness()
+export function onBrightnessChanged()
 {
 	let packet = [];
 	packet[0] = 0x03;
 	packet[1] = 0x08;
-	packet[2] = brightness;
+	packet[2] = device.getBrightness();
 	device.send_report(packet, 1024);
 }
 
