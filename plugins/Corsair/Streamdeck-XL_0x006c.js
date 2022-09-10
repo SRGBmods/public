@@ -53,12 +53,11 @@ export function onbrightnessChanged()
 
 function setBrightness()
 {
-	if (brightness < 0 || brightness > 100)
-	{
-		device.log('Expected brightness percentage to be between 0 and 100');
-	}
-	let brightnessCommandBuffer = [0x05, 0x55, 0xaa, 0xd1, 0x01, brightness, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
-	device.send_report(brightnessCommandBuffer, 1024);
+	let packet = [];
+	packet[0] = 0x03;
+	packet[1] = 0x08;
+	packet[2] = brightness;
+	device.send_report(packet, 1024);
 }
 
 function makeHexString(ColorArray)

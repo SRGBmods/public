@@ -49,6 +49,18 @@ export function onbrightnessChanged()
 	setBrightness();
 }
 
+function setBrightness()
+{
+	let packet = [];
+	packet[0] = 0x05;
+	packet[1] = 0x55;
+	packet[2] = 0xaa;
+	packet[3] = 0xd1;
+	packet[4] = 0x01;
+	packet[5] = brightness;
+	device.send_report(packet, 8191);
+}
+
 function makeHexString(ColorArray)
 {
 	let hexstring = "#";
