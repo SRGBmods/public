@@ -12,7 +12,6 @@ export function ControllableParameters(){
 		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
 		{"property":"buttontimeout", "group":"", "label":"Button Press Timeout", "step":"1", "type":"number", "min":"1", "max":"50", "default":"5"},
-		{"property":"brightness", "group":"", "label":"Screen Brightness", "step":"1", "type":"number", "min":"1", "max":"100", "default":"50"},
 	];
 }
 
@@ -23,6 +22,7 @@ let vLedPositions =
 	[4, 1], [3, 1], [2, 1], [1, 1], [0, 1],
 	[4, 2], [3, 2], [2, 2], [1, 2], [0, 2]
 ];
+let lastButtonRGB;
 
 export function LedNames()
 {
@@ -36,7 +36,8 @@ export function LedPositions()
 
 export function Initialize()
 {
-
+	lastButtonRGB = Array.from(Array(vLedNames.length), () => Array(3).fill(0));
+	setBrightness();
 }
 
 export function Render()
@@ -45,6 +46,11 @@ export function Render()
 }
 
 export function onBrightnessChanged()
+{
+	setBrightness();
+}
+
+function setBrightness()
 {
 	let packet = [];
 	packet[0] = 0x05;
@@ -87,25 +93,57 @@ function grabColors(shutdown)
 		let RGBData2ElectricBoogaloo = [];
 		let iPxX = vLedPositions[iIdx][0];
 		let iPxY = vLedPositions[iIdx][1];
+		let color;
 
 		if(shutdown)
 		{
-			RGBData = device.createColorArray(shutdownColor, 5184, "Inline", "BGR"); //NEEDS TO BE HEX String
-			RGBData2ElectricBoogaloo = device.createColorArray(shutdownColor, 2601, "Inline", "BRG");
+			color = hexToRgb(shutdownColor);
 		}
 		else if (LightingMode === "Forced")
 		{
-			RGBData = device.createColorArray(forcedColor, 5184, "Inline", "BGR"); //NEEDS TO BE HEX String
-			RGBData2ElectricBoogaloo = device.createColorArray(forcedColor, 2601, "Inline", "BRG");
+			color = hexToRgb(forcedColor);
 		}
 		else
 		{
-			RGBData = device.createColorArray(makeHexString(device.color(iPxX, iPxY)), 2583, "Inline", "BGR"); //NEEDS TO BE HEX String
-			RGBData2ElectricBoogaloo = device.createColorArray(makeHexString(device.color(iPxX, iPxY)), 2601, "Inline", "BGR");
+			color = device.color(iPxX, iPxY);
 		}
 
-		sendZone(iIdx, RGBData, RGBData2ElectricBoogaloo);
+		if(lastButtonRGB[iIdx][0] !== color[0] || lastButtonRGB[iIdx][1] !== color[1] || lastButtonRGB[iIdx][2] !== color[2])
+		{
+			lastButtonRGB[iIdx][0] = color[0];
+			lastButtonRGB[iIdx][1] = color[1];
+			lastButtonRGB[iIdx][2] = color[2];
+
+			if(shutdown)
+			{
+				RGBData = device.createColorArray(shutdownColor, 5184, "Inline", "BGR"); //NEEDS TO BE HEX String
+				RGBData2ElectricBoogaloo = device.createColorArray(shutdownColor, 2601, "Inline", "BRG");
+			}
+			else if (LightingMode === "Forced")
+			{
+				RGBData = device.createColorArray(forcedColor, 5184, "Inline", "BGR"); //NEEDS TO BE HEX String
+				RGBData2ElectricBoogaloo = device.createColorArray(forcedColor, 2601, "Inline", "BRG");
+			}
+			else
+			{
+				RGBData = device.createColorArray(makeHexString(device.color(iPxX, iPxY)), 2583, "Inline", "BGR"); //NEEDS TO BE HEX String
+				RGBData2ElectricBoogaloo = device.createColorArray(makeHexString(device.color(iPxX, iPxY)), 2601, "Inline", "BGR");
+			}
+
+			sendZone(iIdx, RGBData, RGBData2ElectricBoogaloo);
+		}
 	}
+}
+
+function hexToRgb(hex)
+{
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	let colors = [];
+	colors[0] = parseInt(result[1], 16);
+	colors[1] = parseInt(result[2], 16);
+	colors[2] = parseInt(result[3], 16);
+
+	return colors;
 }
 
 
