@@ -1,7 +1,7 @@
 export function Name() { return "Royal Kludge RK84"; };  
 export function Publisher() { return "Mizzen"; };
 export function VendorId() { return  0x258a;};  //Device's USB Vendor Id in Hex   
-export function ProductId() { return 0x0059;}; //Device's USB Product Id in Hex
+export function ProductId() { return 0x005d;}; //Device's USB Product Id in Hex
 export function Size() { return [31,11]; };
 export function DefaultPosition(){return [0,5]};    
 export function DefaultScale(){return 1.5};

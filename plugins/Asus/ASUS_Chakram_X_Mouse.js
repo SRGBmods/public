@@ -1,9 +1,9 @@
 export function Name() { return "ASUS Chakram X"; }
 export function VendorId() { return 0x0B05; }
-export function Documentation(){ return "troubleshooting/asus"; }
 export function ProductId() { return 0x1a1a; }
 export function Publisher() { return "WhirlwindFX"; }
-export function Size() { return [5, 5]; }
+export function Documentation(){ return "troubleshooting/asus"; }
+export function Size() { return [3, 4]; }
 export function DefaultPosition() {return [225, 120]; }
 export function DefaultScale(){return 10.0;}
 export function ControllableParameters(){
@@ -26,28 +26,17 @@ function hexToRgb(hex) {
 }
 
 export function Initialize() {
-	//Direct mode init?
-//  51 2C 02 00 19 64 00 FF FF 00 00 00 00 00 00 00 00 00 70 05 FE FF FF FF F4 D9 8D 01 52 04 D4 75 7C 2A 50 77 90 E1 D4 75 98 06 00 00 00 00
-// 00 00 1C DA 8D 01 96 CC 8B 70 98 06 00 00 A6 CC 8B 70
 }
-
 
 export function Shutdown() {
-// revert to rainbow mode
-//sendPacketString("00 51 2C 04 00 48 64 00 00 02 07 0E F5 00 FF 1D 00 06 FF 2B 00 FA FF 39 01 FF 00 48 FF F6 00 56 FF 78 07 64 FF 00 0D",65);
-//sendPacketString("00 50 55",65);
 }
 
-
 let vKeyNames = [
-	"Scroll Wheel", "Logo", "Front Zone",
-
+	"Scroll Wheel", "Logo", "Front Zone", "Front Zone 2", "Front Zone 3",
 ];
 
-// This array must be the same length as vKeys[], and represents the pixel color position in our pixel matrix that we reference.  For example,
-// item at index 3 [9,0] represents the corsair logo, and the render routine will grab its color from [9,0].
 let vKeyPositions = [
-	[1, 4], [1, 1], [1, 0],
+	[1, 1], [1, 3], [0, 0], [1, 0], [2, 0],
 ];
 
 export function LedNames() {
@@ -59,76 +48,43 @@ export function LedPositions() {
 }
 
 export function Render() {
-	sendColors(0);
-	sendColors(1);
-	sendColors(2);
-
+	sendColors(4,5);
+	sendColors(5,0);
 }
 
-function sendColors(zone, shutdown = false){
+function sendColors(zone, zone2, shutdown = false){
 
 	let packet = [];
 	packet[0] = 0x00;
 	packet[1] = 0x51;
-	packet[2] = 0x28;
+	packet[2] = 0x29;
 	packet[3] = zone;
 	packet[4] = 0x00;
-	packet[5] = 0x00;
-	packet[6] = 0x04;
+	packet[5] = zone2;
 
-	let iPxX = vKeyPositions[zone][0];
-	let iPxY = vKeyPositions[zone][1];
-	let col;
+	for(let iIdx = 0; iIdx < vKeyPositions.length; iIdx++) {
+		let iPxX = vKeyPositions[iIdx][0];
+		let iPxY = vKeyPositions[iIdx][1];
+		var color;
 
-	if(shutdown){
-		col = hexToRgb(shutdownColor);
-	}else if (LightingMode === "Forced") {
-		col = hexToRgb(forcedColor);
-	}else{
-		col = device.color(iPxX, iPxY);
+		if(shutdown) {
+			color = hexToRgb(shutdownColor);
+		} else if (LightingMode === "Forced") {
+			color = hexToRgb(forcedColor);
+		} else {
+			color = device.color(iPxX, iPxY);
+		}
+
+		packet[iIdx*3+6]   = color[0];
+		packet[iIdx*3+6+1] = color[1];
+		packet[iIdx*3+6+2] = color[2];
 	}
-
-	packet[7] = col[0];
-	packet[8] = col[1];
-	packet[9] = col[2];
-
+ 
 	device.write(packet, 65);
-}
-
-function sendMouseSettings(){
-	savedDpi1 = dpi1;
-	savedDpi2 = dpi2;
-	savedDpi3 = dpi3;
-	savedDpi4 = dpi4;
-	savedAngleSnapping = angleSnapping;
-	savedPollingRate = pollingDict[mousePolling];
-	savedMouseResponse = responseDict[mouseResponse];
-
-	sendPacketString(`00 51 31 06 00 ${savedAngleSnapping ? "01" : "00"}`, 65);
-	sendPacketString(`00 51 31 04 00 ${savedPollingRate.toString(16)}`, 65);
-	sendPacketString(`00 51 31 05 00 ${savedMouseResponse.toString(16)}`, 65);
-	sendPacketString(`00 51 31 00 00 ${(savedDpi1/100 + 1).toString(16)}`, 65);
-	sendPacketString(`00 51 31 01 00 ${(savedDpi2/100 + 1).toString(16)}`, 65);
-	sendPacketString(`00 51 31 02 00 ${(savedDpi3/100 + 1).toString(16)}`, 65);
-	sendPacketString(`00 51 31 03 00 ${(savedDpi4/100 + 1).toString(16)}`, 65);
-	sendPacketString(`00 50 03 03`, 65);
-
 }
 
 export function Validate(endpoint) {
 	return endpoint.interface === 0;
-}
-
-function sendPacketString(string, size){
-
-	let packet= [];
-	let data = string.split(' ');
-
-	for(let i = 0; i < data.length; i++){
-		packet[i] =parseInt(data[i], 16);//.toString(16)
-	}
-
-	device.write(packet, size);
 }
 
 export function Image() {
