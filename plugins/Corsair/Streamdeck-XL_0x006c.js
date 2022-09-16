@@ -39,7 +39,7 @@ export function LedPositions()
 
 export function Initialize()
 {
-	lastButtonRGB = Array.from(Array(32), () => Array(3).fill(0));
+	lastButtonRGB = Array.from(Array(vLedNames.length), () => Array(3).fill(0));
 	setBrightness();
 }
 
@@ -87,7 +87,7 @@ function decimalToHex(d, padding)
 
 function colorgrabber(shutdown=false)
 {
-	for(let iIdx = 0; iIdx < 32; iIdx++)
+	for(let iIdx = 0; iIdx < vLedNames.length; iIdx++)
 	{
 		let rgbdata = [];
 		let iPxX = vLedPositions[iIdx][0];
@@ -115,7 +115,7 @@ function colorgrabber(shutdown=false)
 
 			let buttoncolor = makeHexString(color);
 
-			rgbdata = device.ConvertColorToJPEG(buttoncolor, 96, 96);
+			rgbdata = device.ConvertColorToImageBuffer(buttoncolor, 96, 96, "JPEG");
 
 			let RGBLength = rgbdata.length.toString(10);
 			let firstbyte = RGBLength[1] + RGBLength[2];
