@@ -1,6 +1,6 @@
 export function Name() { return "TT Floe Riing Controller"; }
 export function VendorId() { return 0x264A; }
-export function ProductId() { return 0x1fa5; }
+export function ProductId() { return 0x1fa6; }
 export function Publisher() { return "ChrisAdkins/WhirlwindFX"; }
 export function Size() { return [1, 1]; }
 export function Type() { return "Hid"; }
