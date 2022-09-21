@@ -2,7 +2,7 @@ export function Name() { return "MSI Mystic Light Controller"; }
 export function VendorId() { return 0x1462; }
 export function Documentation(){ return "troubleshooting/msi"; }
 // DO NOT PID SWAP THIS IF YOU DONT KNOW WHAT YOUR DOING
-export function ProductId() { return 0x7D32;}
+export function ProductId() { return 0x7D18;}
 // YOU CAN BRICK THESE MOTHERBOARDS RGB CONTROLLER WITH ONE WRONG PACKET
 export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [10, 1]; }
@@ -16,6 +16,7 @@ export function ControllableParameters(){
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
 		{"property":"OnboardLEDs", "group":"lighting", "label":"Number of Onboard LEDs","step":"1", "type":"number","min":"0", "max":"20","default":"6"},
 		{"property":"RGBHeaders", "group":"lighting", "label":"Number of 12 Volt RGB Headers","step":"1", "type":"number","min":"0", "max":"2","default":"0"},
+		{"property":"CorsairHeaders", "group":"lighting", "label":"Number of Corsair Headers","step":"1", "type":"number","min":"0", "max":"1","default":"0"},
 		{"property":"perledsupport", "group":"", "label":"Per Led Support","type":"boolean","default": "false"},
 	];
 }
@@ -28,14 +29,14 @@ let ParentDeviceName = "Mystic Light Controller";
 
 export function SupportsSubdevices(){ return true; }
 
-const DeviceMaxLedLimit = 120;
+const DeviceMaxLedLimit = 200;
 
 //Channel Name, Led Limit
 var ChannelArray = 
 [
 	["JRainbow 1", 40],
 	["JRainbow 2", 40],
-	["JRainbow 3", 40],
+	["JCorsair",  120],
 ];
 
 const initialPacket = [
@@ -68,8 +69,8 @@ const perledpacket =
 	0x01, 0x00, 0x00, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x80, 0x00, //JPipe1
 	0x01, 0x00, 0x00, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x80, 0x00, //JPipe2
 	0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x80, 0x00, 0x28, //JRainbow1 //Extra Byte determines number of leds
-	0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x80, 0x00, 0x28, //JRainbow2
-	0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x80, 0x00, 0x28, //JRainbow3 or Corsair? 0x01, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x82, 0x00, 0x78,
+	0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x80, 0x00, 0x28, //JRainbow2
+	0x01, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x82, 0x00, 0x78, //JRainbow3 or Corsair?
 	0x01, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x80, 0x00, //JCorsair other?
 	0x25, 0x00, 0x00, 0x00, 0xa9, 0x00, 0x00, 0x00, 0x9f, 0x00, //JOnboard1
 	0x01, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x80, 0x00, //JOnboard2
@@ -556,6 +557,30 @@ function grabRGBData(Channel)
     return RGBData.concat(new Array(120 - RGBData.length).fill(0));
 }
 
+function grabCorsairRGBData(Channel)
+{
+    let ChannelLedCount = device.channel(ChannelArray[Channel][0]).ledCount;
+	let componentChannel = device.channel(ChannelArray[Channel][0]);
+
+	let RGBData = [];
+
+	if(LightingMode === "Forced"){
+		RGBData = device.createColorArray(forcedColor, ChannelLedCount, "Inline");
+
+	}else if(componentChannel.shouldPulseColors())
+    {
+		ChannelLedCount = 120;
+
+		let pulseColor = device.getChannelPulseColor(ChannelArray[Channel][0], ChannelLedCount);
+		RGBData = device.createColorArray(pulseColor, ChannelLedCount, "Inline");
+
+	}else{
+		RGBData = device.channel(ChannelArray[Channel][0]).getColors("Inline");
+	}
+
+    return RGBData.concat(new Array(360 - RGBData.length).fill(0));
+}
+
 function isperled() //Checks per led based upon whether that's what's in the buffer?
 {
 	let packet = [0x53];
@@ -592,8 +617,7 @@ function sendARGB()
 
 	let JRainbow1RGBData = grabRGBData(0);
 	let JRainbow2RGBData = grabRGBData(1);
-	let JRainbow3RGBData = grabRGBData(2);
-
+	let JCorsairRGBData = grabCorsairRGBData(2);
 	let packet = [];
 	packet[0] = 0x53;
 	packet[1] = 0x25;
@@ -604,8 +628,10 @@ function sendARGB()
 	packet.push(...RGBHeaderData.splice(0,3*RGBHeaders));
 	packet.push(...JRainbow1RGBData.splice(0,120));
 	packet.push(...JRainbow2RGBData.splice(0,120));
-	packet.push(...JRainbow3RGBData.splice(0,120));
-
+	if(CorsairHeaders > 0)
+	{
+	packet.push(...JCorsairRGBData.splice(0,360));
+	}
 	device.send_report(packet,725);
 }
 
