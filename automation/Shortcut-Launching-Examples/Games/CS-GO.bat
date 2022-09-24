@@ -45,8 +45,15 @@ explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/CS:GO?-silentlaunch-"
 explorer steam://run/730
-echo Press any key to return to previous effects
-pause > nul 2> nul
+timeout 2 > nul 2> nul
+goto exitcheck
+
+:exitcheck
+tasklist /fi "imagename eq csgo.exe"|find /i "=========================" >nul 2>nul &&(
+w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
+goto exitcheck
+)
+
 explorer "signalrgb://layout/apply/%CurrentLayout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/%CurrentEffect%?-silentlaunch-" 
