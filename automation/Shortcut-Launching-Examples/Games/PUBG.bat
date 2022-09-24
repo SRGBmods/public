@@ -43,12 +43,13 @@ goto gamelaunch
 :GAMELAUNCH
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/PUBG:%%20Battlegrounds?-silentlaunch-"
+timeout 2 > nul 2> nul
+explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 explorer steam://run/578080
+timeout 20 > nul 2> nul
 goto exitcheck
 
 :exitcheck
-explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
-timeout 2 > nul 2> nul
 tasklist /fi "imagename eq TslGame.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck
