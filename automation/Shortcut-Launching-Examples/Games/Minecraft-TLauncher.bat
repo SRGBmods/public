@@ -45,10 +45,10 @@ explorer "signalrgb://layout/apply/%Layout%?-silentlaunch-"
 timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition?-silentlaunch-"
 explorer %appdata%\.minecraft\TLauncher.exe
+timeout 20 > nul 2> nul
 goto exitcheck
 
 :exitcheck
-timeout 20 > nul 2> nul
 tasklist /fi "imagename eq javaw.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck

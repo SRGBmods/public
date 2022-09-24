@@ -46,10 +46,10 @@ timeout 2 > nul 2> nul
 explorer "signalrgb://effect/apply/Minecraft%%20Java%%20Edition%%20UW?-silentlaunch-"
 set "x=|dir %LocalAppData%\Packages /b | findstr packageName" & set "y=!App" & set "z=%x%%y%" & echo.%z%
 explorer "minecraft://"
+timeout 2 > nul 2> nul
 goto exitcheck
 
 :exitcheck
-timeout 2 > nul 2> nul
 tasklist /fi "imagename eq Minecraft.Windows.exe"|find /i "=========================" >nul 2>nul &&(
 w32tm /stripchart /computer:localhost /period:10 /dataonly /samples:2  1>nul
 goto :exitcheck
