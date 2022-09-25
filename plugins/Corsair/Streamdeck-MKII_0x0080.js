@@ -76,7 +76,7 @@ function setBrightness()
 	packet[0] = 0x03;
 	packet[1] = 0x08;
 	packet[2] = hwbrightness;
-	device.send_report(packet, 1024);
+	device.send_report(packet, 32);
 }
 
 function makeHexString(ColorArray)
