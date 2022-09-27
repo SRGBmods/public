@@ -8,7 +8,6 @@ REM otherwise place keep it at always
 set RULE=always
 REM -------------------------------------------------------------------------------------
 
-:APPLYLAYOUT
 REM -------------------------------------------------------------------------------------
 REM You will need to set the layout you have created for the audio visualizers you use
 REM -------------------------------------------------------------------------------------
