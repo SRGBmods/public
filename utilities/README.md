@@ -1,0 +1,1 @@
+The following programs / scripts will help provide additional functionality not provided natively by SignalRGB.
