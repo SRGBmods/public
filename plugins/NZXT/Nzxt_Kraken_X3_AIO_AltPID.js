@@ -178,7 +178,7 @@ function sendLogo(shutdown = false)
     {
         col = device.color(iPxX, iPxY);  
     }
-    let packet = [0x21, 0x04, 0x04, 0x04, 0x00, 0x32, 0x00, col[1], col[0], col[2]]
+    let packet = [0x2a, 0x04, 0x04, 0x04, 0x00, 0x32, 0x00, col[1], col[0], col[2]]
 
     packet[56]   = 0x01;
     packet[57]   = 0x00;
