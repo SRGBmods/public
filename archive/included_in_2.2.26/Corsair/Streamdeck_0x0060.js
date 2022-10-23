@@ -1,19 +1,23 @@
-/* eslint-disable brace-style */
 export function Name() { return "Elgato Streamdeck"; }
 export function VendorId() { return 0x0fd9; }
 export function ProductId() { return 0x0060; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Documentation() { return "troubleshooting/corsair"; }
 export function Size() { return [5, 3]; }
-export function DefaultPosition(){return [240, 120];}
-export function DefaultScale(){return 8.0;}
-export function ControllableParameters(){
+export function DefaultPosition(){return [0, 0];}
+export function DefaultScale(){return 1.0;}
+/* global
+LightingMode:readonly
+forcedColor:readonly
+hwbrightness:readonly
+*/
+export function ControllableParameters()
+{
 	return [
-		{"property":"shutdownColor", "group":"lighting", "label":"Shutdown Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
-		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
+		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Elgato-Friendly", "Canvas", "Forced"], "default":"Canvas"},
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
-		{"property":"hwresetdevice", "label":"Reset Device","type":"boolean","default":"false"},
-		{"property":"buttontimeout", "group":"", "label":"Button Press Timeout", "step":"1", "type":"number", "min":"1", "max":"50", "default":"5"},
+		{"property":"hwresetdevice", "label":"Reset Device", "type":"boolean", "default":"false"},
+		{"property":"ButtonSize", "group":"", "label":"Button Size", "step":"1", "type":"number", "min":"1", "max":"36", "default":"36"},
 		{"property":"hwbrightness", "group":"", "label":"Hardware Brightness", "step":"1", "type":"number", "min":"1", "max":"100", "default":"25"},
 	];
 }
@@ -21,11 +25,13 @@ export function ControllableParameters(){
 let vLedNames = [ "LED 1", "LED 2", "LED 3", "LED 4", "LED 5", "LED 6", "LED 7", "LED 8", "LED 9", "LED 10", "LED 11", "LED 12", "LED 13", "LED 14", "LED 15" ];
 let vLedPositions =
 [
-	[4, 0], [3, 0], [2, 0], [1, 0], [0, 0],
-	[4, 1], [3, 1], [2, 1], [1, 1], [0, 1],
-	[4, 2], [3, 2], [2, 2], [1, 2], [0, 2]
+	[0, 0], [1, 0], [2, 0], [3, 0], [4, 0],
+	[0, 1], [1, 1], [2, 1], [3, 1], [4, 1],
+	[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]
 ];
 let lastButtonRGB;
+const RowWidth = 5;
+const ColHeight = 3;
 
 export function LedNames()
 {
@@ -40,12 +46,27 @@ export function LedPositions()
 export function Initialize()
 {
 	lastButtonRGB = Array.from(Array(vLedNames.length), () => Array(3).fill(0));
+	if (LightingMode === "Canvas") {
+		device.setSize([ButtonSize * RowWidth + 1, ButtonSize * ColHeight + 1]);
+	}
 	setBrightness();
 }
 
 export function Render()
 {
 	grabColors();
+}
+
+export function onLightingModeChanged() {
+	if (LightingMode === "Elgato-Friendly" || LightingMode === "Forced") {
+		device.setSize([5, 3]);
+	} else {
+		device.setSize([ButtonSize * RowWidth + 1, ButtonSize * ColHeight + 1]);
+	}
+}
+
+export function onButtonSizeChanged() {
+	device.setSize([ButtonSize * RowWidth + 1, ButtonSize * ColHeight + 1]);
 }
 
 export function onhwresetdeviceChanged()
@@ -55,14 +76,8 @@ export function onhwresetdeviceChanged()
 
 function resetDevice()
 {
-	let packet = [];
-	packet[0] = 0x02;
-	device.write(packet, 8191);
-	let rpacket = [];
-	rpacket[0] = 0x0b;
-	rpacket[1] = 0x63;
-	device.send_report(rpacket, 17);
-	//device.log("reseting device");
+	device.write([0x02], 1024);
+	device.send_report([0x0b, 0x63], 32);
 	setBrightness();
 }
 
@@ -73,14 +88,7 @@ export function onhwbrightnessChanged()
 
 function setBrightness()
 {
-	let packet = [];
-	packet[0] = 0x05;
-	packet[1] = 0x55;
-	packet[2] = 0xaa;
-	packet[3] = 0xd1;
-	packet[4] = 0x01;
-	packet[5] = hwbrightness;
-	device.send_report(packet, 8191);
+	device.send_report([0x05, 0x55, 0xaa, 0xd1, 0x01, hwbrightness], 32);
 }
 
 function makeHexString(ColorArray)
@@ -118,7 +126,7 @@ function grabColors(shutdown)
 
 		if(shutdown)
 		{
-			color = hexToRgb(shutdownColor);
+			resetDevice();
 		}
 		else if (LightingMode === "Forced")
 		{
@@ -137,21 +145,50 @@ function grabColors(shutdown)
 
 			if(shutdown)
 			{
-				RGBData = device.createColorArray(shutdownColor, 5184, "Inline", "BGR"); //NEEDS TO BE HEX String
-				RGBData2ElectricBoogaloo = device.createColorArray(shutdownColor, 2601, "Inline", "BGR");
+				resetDevice();
 			}
 			else if (LightingMode === "Forced")
 			{
 				RGBData = device.createColorArray(forcedColor, 5184, "Inline", "BGR"); //NEEDS TO BE HEX String
 				RGBData2ElectricBoogaloo = device.createColorArray(forcedColor, 2601, "Inline", "BGR");
 			}
-			else
+			else if (LightingMode === "Elgato-Friendly")
 			{
 				RGBData = device.createColorArray(makeHexString(device.color(iPxX, iPxY)), 2583, "Inline", "BGR"); //NEEDS TO BE HEX String
 				RGBData2ElectricBoogaloo = device.createColorArray(makeHexString(device.color(iPxX, iPxY)), 2601, "Inline", "BGR");
 			}
+			else if (LightingMode === "Canvas")
+			{
+			let RGBData = [];
+			let iXoffset = (iIdx % RowWidth) * ButtonSize;
+			let iYoffset = Math.floor(iIdx / RowWidth) * ButtonSize;
 
+			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {outputWidth:72, outputHeight:72, format: "BMP" });
+
+			let BytesLeft = RGBData.length;
+			let packetsSent = 0;
+
+			while(BytesLeft > 0)
+			{
+				const BytesToSend = Math.min(1016, BytesLeft);
+
+				if(BytesToSend < 1016)
+				{
+					sendNewZone(BytesLeft, iIdx, RGBData.splice(0, BytesLeft), packetsSent, 0x01);
+				}
+				else
+				{
+					sendNewZone(BytesToSend, iIdx, RGBData.splice(0, BytesToSend), packetsSent, 0x00);
+				}
+
+				BytesLeft -= BytesToSend;
+				packetsSent++;
+			}
+		}
+
+			if (LightingMode === "Elgato-Friendly" || LightingMode === "Forced") {
 			sendZone(iIdx, RGBData, RGBData2ElectricBoogaloo);
+			}
 		}
 	}
 }
@@ -196,6 +233,13 @@ function sendZone(iIdx, RGBData, RGBData2ElectricBoogaloo)
 	device.write(packet2electricboogaloo, 8191);
 }
 
+function sendNewZone(packetLength, iIdx, rgbdata, packetsSent, finalPacket)
+{
+	let packet = [0x02, 0x01, 0x01, 0x00, 0x00, iIdx, finalPacket, packetLength & 0xFF, (packetLength >> 8) & 0xFF, packetsSent, 0x00];
+	packet.push(...rgbdata);
+
+	device.write(packet, 8191);
+}
 
 export function Validate(endpoint)
 {
