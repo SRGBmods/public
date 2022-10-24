@@ -161,7 +161,7 @@ function colorgrabber(shutdown=false)
 			let iXoffset = (iIdx % RowWidth) * ButtonSize;
 			let iYoffset = Math.floor(iIdx / RowWidth) * ButtonSize;
 
-			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {flipV: true});
+			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {flipV: true, flipH: true});
 
 
 			let BytesLeft = RGBData.length;
