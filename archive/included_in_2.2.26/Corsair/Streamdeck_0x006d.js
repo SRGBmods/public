@@ -1,10 +1,9 @@
-export function Name() { return "Elgato Streamdeck XL"; }
+export function Name() { return "Elgato Streamdeck"; }
 export function VendorId() { return 0x0fd9; }
-export function ProductId() { return 0x006c; }
+export function ProductId() { return 0x006d; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Documentation() { return "troubleshooting/corsair"; }
-export function Size() { return [8, 4]; }
-export function DeviceMessage() { return ["This device needs additional functionality", "Edit plugin to adjust size for Canvas or Elgato-Friendly"]; }
+export function Size() { return [5, 3]; }
 export function DefaultPosition(){return [0, 0];}
 export function DefaultScale(){return 1.0;}
 /* global
@@ -23,17 +22,16 @@ export function ControllableParameters()
 	];
 }
 
-let vLedNames = [ "LED 1", "LED 2", "LED 3", "LED 4", "LED 5", "LED 6", "LED 7", "LED 8", "LED 9", "LED 10", "LED 11", "LED 12", "LED 13", "LED 14", "LED 15", "LED 16", "LED 17", "LED 18", "LED 19", "LED 20", "LED 21", "LED 22", "LED 23", "LED 24", "LED 25", "LED 26", "LED 27", "LED 28", "LED 29", "LED 30", "LED 31", "LED 32" ];
+let vLedNames = [ "LED 1", "LED 2", "LED 3", "LED 4", "LED 5", "LED 6", "LED 7", "LED 8", "LED 9", "LED 10", "LED 11", "LED 12", "LED 13", "LED 14", "LED 15" ];
 let vLedPositions =
 [
-	[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
-	[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1],
-	[0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2], [6, 2], [7, 2],
-	[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3]
+	[0, 0], [1, 0], [2, 0], [3, 0], [4, 0],
+	[0, 1], [1, 1], [2, 1], [3, 1], [4, 1],
+	[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]
 ];
 let lastButtonRGB;
-const RowWidth = 8;
-const ColHeight = 4;
+const RowWidth = 5;
+const ColHeight = 3;
 
 export function LedNames()
 {
@@ -66,8 +64,7 @@ export function onhwresetdeviceChanged()
 
 export function onLightingModeChanged() {
 	if (LightingMode === "Elgato-Friendly" || LightingMode === "Forced") {
-		device.setSize([8, 4]);
-		//device.setScale([8.0]);
+		device.setSize([5, 3]);
 	} else {
 		device.setSize([ButtonSize * RowWidth + 1, ButtonSize * ColHeight + 1]);
 	}
@@ -164,7 +161,8 @@ function colorgrabber(shutdown=false)
 			let iXoffset = (iIdx % RowWidth) * ButtonSize;
 			let iYoffset = Math.floor(iIdx / RowWidth) * ButtonSize;
 
-			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {outputWidth:96, outputHeight:96, flipV: true, flipH: true});
+			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {flipV: true, flipH: true});
+
 
 			let BytesLeft = RGBData.length;
 			let packetsSent = 0;
@@ -190,7 +188,7 @@ function colorgrabber(shutdown=false)
 		{
 			let buttoncolor = makeHexString(color);
 
-			rgbdata = device.ConvertColorToImageBuffer(buttoncolor, 96, 96, "JPEG");
+			rgbdata = device.ConvertColorToImageBuffer(buttoncolor, 72, 72, "JPEG");
 
 			let RGBLength = rgbdata.length.toString(10);
 			let firstbyte = RGBLength[1] + RGBLength[2];
