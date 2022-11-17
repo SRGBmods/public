@@ -15,14 +15,6 @@ export function ControllableParameters() {
 	];
 }
 
-export function Initialize() {
-
-}
-
-export function Shutdown() {
-	sendColors(true);
-}
-
 let vLedNames = [
 	"LED 1","LED 2", "LED 3", "LED 4", "LED 5",
 ];
@@ -39,25 +31,22 @@ export function LedPositions() {
 	return vLedPos;
 }
 
+export function Initialize() {
+	device.write([0xec, 0x3b, 0x00, 0xe3, 0xff], 65)
+}
+
 export function Render() {
 	sendColors();
 }
 
-function hexToRgb(hex) {
-	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	let colors = [];
-	colors[0] = parseInt(result[1], 16);
-	colors[1] = parseInt(result[2], 16);
-	colors[2] = parseInt(result[3], 16);
-
-	return colors;
+export function Shutdown() {
+	sendColors(true);
 }
 
 function sendColors(shutdown = false){
 	let packet = [];
 	let color;
 
-	//packet[0x00]   = 0x00;
 	packet[0x00]   = 0xec;
 	packet[0x01]   = 0x40;
 	packet[0x02]   = 0x80;
@@ -92,8 +81,18 @@ function sendColors(shutdown = false){
 	device.write(packet, 65);
 }
 
+function hexToRgb(hex) {
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	let colors = [];
+	colors[0] = parseInt(result[1], 16);
+	colors[1] = parseInt(result[2], 16);
+	colors[2] = parseInt(result[3], 16);
+
+	return colors;
+}
+
 export function Validate(endpoint) {
-	return endpoint.interface === 0;
+	return endpoint.interface === -1 || endpoint.interface === 0 ;
 }
 
 export function Image() {
