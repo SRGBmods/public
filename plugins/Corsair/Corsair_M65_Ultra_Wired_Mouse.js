@@ -1,4 +1,4 @@
-export function Name() { return "Corsair Gaming M65 Ultra"; }
+export function Name() { return "Corsair Gaming M65 Ultra Wired"; }
 export function VendorId() { return 0x1b1c; }
 export function ProductId() { return 0x1b9e; }
 export function Publisher() { return "WhirlwindFX"; }
@@ -15,13 +15,6 @@ export function ControllableParameters(){
 		{"property":"dpi1", "group":"mouse", "label":"DPI", "step":"50", "type":"number", "min":"200", "max":"12400", "default":"800"},
 	];
 }
-/* global
-shutdownColor:readonly
-LightingMode:readonly
-forcedColor:readonly
-DpiControl:readonly
-dpi1:readonly
-*/
 
 let vLedNames = ["Scrol wheel", "DPI button", "Logo"];
 
@@ -35,15 +28,10 @@ export function LedPositions() {
 	return vLedPositions;
 }
 
-let CORSAIR_COMMAND_WRITE       = 0x07;
-let CORSAIR_COMMAND_READ        = 0x0E;
-let CORSAIR_COMMAND_STREAM      = 0x7F;
-
-let CORSAIR_LIGHTING_CONTROL_HARDWARE           = 0x01;
-let CORSAIR_LIGHTING_CONTROL_SOFTWARE           = 0x02;
-
-let CORSAIR_PROPERTY_SPECIAL_FUNCTION = 0x04;
-let CORSAIR_PROPERTY_SUBMIT_MOUSE_COLOR         = 0x22;
+let CORSAIR_COMMAND_WRITE       		= 0x07;
+let CORSAIR_LIGHTING_CONTROL_HARDWARE	= 0x01;
+let CORSAIR_LIGHTING_CONTROL_SOFTWARE	= 0x02;
+let CORSAIR_PROPERTY_SPECIAL_FUNCTION	= 0x04;
 
 function EnableSoftwareControl() {
 	let packet = [];
@@ -128,7 +116,7 @@ function hexToRgb(hex) {
 }
 
 export function Validate(endpoint) {
-	return endpoint.interface === 1 || endpoint.interface === 2;
+	return endpoint.interface === 1;
 }
 
 export function Image() {
