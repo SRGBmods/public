@@ -63,6 +63,7 @@ echo Attempting to remove SignalRgbDriver.sys
 takeown /f C:\Windows\System32\drivers\SignalRgbDriver.sys
 icacls "C:\Windows\System32\drivers\SignalRgbDriver.sys" /Q /grant %%username%%:f
 del "C:\Windows\System32\drivers\SignalRgbDriver.sys" /q /f
+timeout /t 1 > nul 2> nul
 echo:
 echo ===============
 echo    [94mAll done![0m
