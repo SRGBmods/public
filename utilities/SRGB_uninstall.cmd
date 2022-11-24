@@ -59,6 +59,10 @@ echo Deleting Login Credentials...
 cmdkey /delete:whirlwindengine.firebase.auth/__FIRAPP_DEFAULT[0]
 cmdkey /delete:whirlwindengine.firebase.auth/__FIRAPP_DEFAULT[1]
 timeout /t 1 > nul 2> nul
+echo Attempting to remove SignalRgbDriver.sys
+takeown /f C:\Windows\System32\drivers\SignalRgbDriver.sys
+icacls "C:\Windows\System32\drivers\SignalRgbDriver.sys" /Q /grant %%username%%:f
+del "C:\Windows\System32\drivers\SignalRgbDriver.sys" /q /f
 echo:
 echo ===============
 echo    [94mAll done![0m
