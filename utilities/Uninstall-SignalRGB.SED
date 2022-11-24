@@ -21,17 +21,17 @@ AdminQuietInstCmd=%AdminQuietInstCmd%
 UserQuietInstCmd=%UserQuietInstCmd%
 SourceFiles=SourceFiles
 [Strings]
-InstallPrompt=
+InstallPrompt=Uninstall SignalRGB?
 DisplayLicense=
-FinishMessage=Uninstall Complete
-TargetName=D:\Naitoshedo\Desktop\Uninstall-SignalRGB.EXE
+FinishMessage=Please do a Full Power Cycle.
+TargetName=C:\Windows\system32\Uninstall-SignalRGB.EXE
 FriendlyName=Uninstall SignalRGB
 AppLaunched=cmd /c SRGB_uninstall.cmd
 PostInstallCmd=<None>
 AdminQuietInstCmd=
 UserQuietInstCmd=
-FILE0="SFC-DISM.bat"
+FILE0="SRGB_uninstall.cmd"
 [SourceFiles]
-SourceFiles0=D:\Naitoshedo\Desktop\
+SourceFiles0=D:\Naitoshedo\Documents\GitHub\WhirlwindFX\public\utilities\
 [SourceFiles0]
 %FILE0%=
