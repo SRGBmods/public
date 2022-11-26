@@ -28,45 +28,28 @@ export function LedPositions() {
 	return vLedPositions;
 }
 
-let CORSAIR_COMMAND_WRITE       		= 0x07;
-let CORSAIR_LIGHTING_CONTROL_HARDWARE	= 0x01;
-let CORSAIR_LIGHTING_CONTROL_SOFTWARE	= 0x02;
-let CORSAIR_PROPERTY_SPECIAL_FUNCTION	= 0x04;
-
 function EnableSoftwareControl() {
-	let packet = [];
-
-	// Lighting ctrl packet.
-	packet[0x00]           = 0x00;
-	packet[0x01]           = CORSAIR_COMMAND_WRITE;
-	packet[0x02]           = CORSAIR_PROPERTY_SPECIAL_FUNCTION;
-	packet[0x03]           = CORSAIR_LIGHTING_CONTROL_SOFTWARE;
-
-	// Send.
-	device.write(packet, 65);
+	device.write([0x00, 0x08, 0x01, 0x03, 0x00, 0x02], 65);
+	device.write([0x00, 0x08, 0x02, 0x00, 0xE8, 0x03], 65);
+	device.write([0x00, 0x08, 0x0D, 0x00, 0x01], 65);
 }
-
 
 function ReturnToHardwareControl() {
-	let packet = [];
-
-	// Lighting ctrl packet.
-	packet[0x00]           = 0x00;
-	packet[0x01]           = CORSAIR_COMMAND_WRITE;
-	packet[0x02]           = CORSAIR_PROPERTY_SPECIAL_FUNCTION;
-	packet[0x03]           = CORSAIR_LIGHTING_CONTROL_HARDWARE;
-
-	// Send packet.
-	device.write(packet, 65);
+	device.write([0x00, 0x08, 0x01, 0x03, 0x00, 0x01], 65);
 }
-
 
 export function Initialize() {
 	EnableSoftwareControl();
+	if(DpiControl) {
+		setDpi(dpi1);
+	}
 }
 
 export function Render() {
 	sendColors();
+	if(savedDpi1 != dpi1 && DpiControl){
+		setDpi(dpi1);
+	}
 }
 
 export function Shutdown() {
@@ -103,6 +86,34 @@ function sendColors(shutdown = false){
 	}
 
 	device.write(packet, 65);
+}
+
+function setDpi(dpi){
+
+	savedDpi1 = dpi;
+
+	for (let i = 0; i < 2; i++) {
+		var packet = [];
+		packet[0] = 0x00;
+		packet[1] = 0x08;
+		packet[2] = 0x01;
+		packet[3] = 0x21;
+		packet[4] = 0x00;
+		packet[5] = dpi%256;
+		packet[6] = Math.floor(dpi/256);
+		device.write(packet, 65);
+
+		var packet = [];
+		packet[0] = 0x00;
+		packet[1] = 0x08;
+		packet[2] = 0x01;
+		packet[3] = 0x22;
+		packet[4] = 0x00;
+		packet[5] = dpi%256;
+		packet[6] = Math.floor(dpi/256);
+		device.write(packet, 65);
+		device.pause(20);
+	}
 }
 
 function hexToRgb(hex) {
