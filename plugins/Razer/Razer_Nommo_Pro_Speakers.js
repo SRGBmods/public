@@ -3,9 +3,9 @@ export function VendorId() { return 0x1532; }
 export function ProductId() { return 0x0518; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Documentation(){ return "troubleshooting/razer"; }
-export function Size() { return [9, 5]; }
-export function DefaultPosition(){return [100, 0];}
-export function DefaultScale(){return 8.0;}
+export function Size() { return [1, 1]; }
+export function DefaultPosition(){return [100, 60];}
+export function DefaultScale(){return 1.0;}
 export function ControllableParameters(){
 	return [
 		{"property":"shutdownColor", "group":"lighting", "label":"Shutdown Color", "min":"0", "max":"360", "type":"color", "default":"009bde"},
@@ -14,70 +14,91 @@ export function ControllableParameters(){
 	];
 }
 
-let vLedNames = [
-	"Left 1", "Left 2", "Left 3", "Left 4","Left 5","Left 6","Left 7","Left 8",
-	"Right 1", "Right 2", "Right 3","Right 4", "Right 5", "Right 6", "Right 7", "Right 8"
-];
-
-let vLedPositions = [
-	[2, 3], [3, 2], [3, 1], [2, 0], [1, 0], [0, 1], [0, 2], [1, 3],
-	[7, 3], [8, 2], [8, 1], [7, 0], [6, 0], [5, 1], [5, 2], [6, 3]
-];
-
-export function LedNames() {
-	return vLedNames;
-}
-
-export function LedPositions() {
-	return vLedPositions;
+const Nommo = {
+	Speaker_Left : {
+		devicename: "Left Speaker",
+		deviceid: 0,
+		devicecrc: 16,
+		lednames: ["Left 1", "Left 2", "Left 3", "Left 4","Left 5","Left 6","Left 7","Left 8"],
+		ledpos:	[[2, 3], [3, 2], [3, 1], [2, 0], [1, 0], [0, 1], [0, 2], [1, 3]],
+		width: 4,
+		height: 4,
+		image: Image()
+	},
+	Speaker_Right : {
+		devicename: "Right Speaker",
+		deviceid: 1,
+		devicecrc: 17,
+		lednames: ["Right 1", "Right 2", "Right 3","Right 4", "Right 5", "Right 6", "Right 7", "Right 8"],
+		ledpos:	[[2, 3], [3, 2], [3, 1], [2, 0], [1, 0], [0, 1], [0, 2], [1, 3]],
+		width: 4,
+		height: 4,
+		image: Image()
+	}
 }
 
 export function Initialize() {
+	device.createSubdevice("LeftSpeaker"); 
+	device.setSubdeviceName("LeftSpeaker",`${Nommo.Speaker_Left.devicename}`);
+	device.setSubdeviceImage("LeftSpeaker", Nommo.Speaker_Left.image);
+	device.setSubdeviceSize("LeftSpeaker",Nommo.Speaker_Left.width,Nommo.Speaker_Left.height)
+	device.setSubdeviceLeds("LeftSpeaker",Nommo.Speaker_Left.lednames,Nommo.Speaker_Left.ledpos)
 
+	device.createSubdevice("RightSpeaker"); 
+	device.setSubdeviceName("RightSpeaker",`${Nommo.Speaker_Right.devicename}`);
+	device.setSubdeviceImage("RightSpeaker", Nommo.Speaker_Right.image);
+	device.setSubdeviceSize("RightSpeaker",Nommo.Speaker_Right.width,Nommo.Speaker_Right.height)
+	device.setSubdeviceLeds("RightSpeaker",Nommo.Speaker_Right.lednames,Nommo.Speaker_Right.ledpos)
 }
 
 export function Render() {
-	sendColors(0, 0, 16);
-	sendColors(1, 8, 17);
+	sendColors();
 }
 
 export function Shutdown() {
-	sendColors(0, 0, 16, true);
-	sendColors(1, 8, 17, true);
+	sendColors(true);
 }
 
-function sendColors(speaker, start, crc, shutdown = false) {
+function sendColors(shutdown = false) {
 	let packet = [];
 
 	packet[2] = 0x1F;
 	packet[6] = 0x1D;
 	packet[7] = 0x0F;
 	packet[8] = 0x03;
-	packet[11] = speaker;
 	packet[13] = 0x07;
 
-	for(let iIdx = 0; iIdx < 8; iIdx++){
-		let iPxX = vLedPositions[start+iIdx][0];
-		let iPxY = vLedPositions[start+iIdx][1];
-		var col;
+	for(let iIdx = 0; iIdx < Object.keys(Nommo).length; iIdx++){
+		let Speaker = Object.values(Nommo)[iIdx];
 
-		if(shutdown){
-			col = hexToRgb(shutdownColor);
-		}else if (LightingMode === "Forced") {
-			col = hexToRgb(forcedColor);
-		}else{
-			col = device.color(iPxX, iPxY);
+		for(let i = 0; i < Object.values(Nommo)[iIdx].ledpos.length; i++){
+			let iPxX = Speaker.ledpos[i][0];
+			let iPxY = Speaker.ledpos[i][1];
+			var col;
+	
+			if(shutdown){
+				col = hexToRgb(shutdownColor);
+			}else if (LightingMode === "Forced") {
+				col = hexToRgb(forcedColor);
+			}else{
+				if(iIdx == 0){
+					col = device.subdeviceColor("LeftSpeaker", iPxX, iPxY);
+				}else{
+					col = device.subdeviceColor("RightSpeaker",iPxX, iPxY);
+				}
+			}
+	
+			let iLedIdx = (i*3) + 14;
+			
+			packet[iLedIdx] = col[0];
+			packet[iLedIdx+1] = col[1];
+			packet[iLedIdx+2] = col[2];
 		}
-
-		let iLedIdx = (iIdx*3) + 14;
-
-		packet[iLedIdx] = col[0];
-		packet[iLedIdx+1] = col[1];
-		packet[iLedIdx+2] = col[2];
+		packet[11] = Speaker.deviceid;
+		packet[89] = Speaker.devicecrc;
+		device.send_report(packet, 91);
+		device.pause(1);
 	}
-	packet[89] = crc;
-	device.send_report(packet, 91);
-	device.pause(1);
 }
 
 function hexToRgb(hex) {
