@@ -14,8 +14,10 @@ export function ControllableParameters(){
 	];
 }
 
-let vLedNames = ["Left 1", "Left 2", "Left 3", "Left 4","Left 5","Left 6","Left 7","Left 8",
-				 "Right 1", "Right 2", "Right 3","Right 4", "Right 5", "Right 6", "Right 7", "Right 8"];
+let vLedNames = [
+	"Left 1", "Left 2", "Left 3", "Left 4","Left 5","Left 6","Left 7","Left 8",
+	"Right 1", "Right 2", "Right 3","Right 4", "Right 5", "Right 6", "Right 7", "Right 8"
+];
 
 let vLedPositions = [
 	[2, 3], [3, 2], [3, 1], [2, 0], [1, 0], [0, 1], [0, 2], [1, 3],
