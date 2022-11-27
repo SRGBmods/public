@@ -16,6 +16,8 @@ export function ControllableParameters(){
 	];
 }
 
+let savedDpi1 = 800;
+
 let vLedNames = ["Scrol wheel", "DPI button", "Logo"];
 
 let vLedPositions = [[1, 1], [1, 2], [1, 3]];
