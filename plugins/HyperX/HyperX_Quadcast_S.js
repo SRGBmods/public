@@ -102,8 +102,7 @@ function sendColor(shutdown = false) {
 	}
 }
 
-function hexToRgb(hex) 
-{
+function hexToRgb(hex) {
 	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	let colors = [];
 	colors[0] = parseInt(result[1], 16);
@@ -113,8 +112,7 @@ function hexToRgb(hex)
 	return colors;
 }
 
-export function Validate(endpoint) 
-{
+export function Validate(endpoint) {
 	return endpoint.interface === 0;
 }
 
