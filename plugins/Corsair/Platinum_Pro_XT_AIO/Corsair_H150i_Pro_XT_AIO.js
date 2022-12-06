@@ -1,6 +1,6 @@
 export function Name() { return "Corsair H150i Pro XT"; }
 export function VendorId() { return  0x1b1c; }
-export function ProductId() { return 0x0C22; }
+export function ProductId() { return [0x0C2f, 0x0C22]; }
 export function Publisher() { return "WhirlwindFX"; }
 export function DefaultComponentBrand() { return "Corsair";}
 export function Documentation(){ return "troubleshooting/corsair"; }
