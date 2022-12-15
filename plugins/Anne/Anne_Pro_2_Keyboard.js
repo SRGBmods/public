@@ -1,6 +1,6 @@
 export function Name() { return "Anne Pro 2"; }
 export function VendorId() { return 0x04D9; }
-export function ProductId() { return [0xA293, 0xA292, 0xA297]; }
+export function ProductId() { return [0xA293, 0xA292]; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [14, 5]; }
 export function DefaultPosition(){return [10, 100];}
