@@ -52,7 +52,7 @@ function SetupChannels()
 	}
 }
 
-const PluginVersion = "1.0.0";
+const PluginVersion = "1.1.0";
 
 const vKeyNames = [];
 const vKeyPositions = [];
@@ -81,20 +81,20 @@ function compareFirmwareVersion()
 {
 	let firmwarePacket = device.read([0x00], 4, 10);
 	let FirmwareVersion = firmwarePacket[1] + "." + firmwarePacket[2] + "." + firmwarePacket[3]
-    device.log("SRGBmods LC v1 Firmware version: " + FirmwareVersion);
+	device.log("SRGBmods LC v1 Firmware version: " + FirmwareVersion);
 	device.log("SRGBmods LC v1 Plugin version:   " + PluginVersion);
 	if(FirmwareVersion !== PluginVersion)
-    {
+	{
 		device.log("Firmware <-> Plugin version mismatch! Make sure to use matching versions!");
 		device.notify(`Firmware ${FirmwareVersion} <-> Plugin ${PluginVersion} version mismatch!`, `Make sure to use matching versions!`, 0);
-    }
+	}
 }
 
 function requestFirmwareVersion()
 {
-    let packet = [ 0x00, 0x00, 0x00, 0x00, 0xCC ];
+	let packet = [ 0x00, 0x00, 0x00, 0x00, 0xCC ];
 	device.write(packet, 65);
-    compareFirmwareVersion();
+	compareFirmwareVersion();
 }
 
 export function Render()
@@ -123,7 +123,6 @@ export function Shutdown()
 
 function SendChannel(Channel, shutdown = false)
 {
-	
 	let ChannelLedCount = device.channel(ChannelArray[Channel][0]).ledCount > ChannelArray[Channel][1] ? ChannelArray[Channel][1] : device.channel(ChannelArray[Channel][0]).ledCount;
 
 	let RGBData = [];
@@ -143,42 +142,27 @@ function SendChannel(Channel, shutdown = false)
 	{
 		const deviceCh = device.channel(ChannelArray[Channel][0]);
 		RGBData = deviceCh.getColors("Inline");
-		const components = deviceCh.getComponentNames();
-		const componentCount = components.length;
+	}
 
-		for(let currComp = 0; currComp < componentCount; currComp++)
+	if(ColorCompression_enable)
+	{
+		for(let runCount = 0; runCount < ChannelLedCount * 3 / multiplier; runCount++)
 		{
-			var DeviceLedCount = deviceCh.getComponentData(components[currComp]).LedCount;
-			const DeviceRGBData = RGBData.splice(0, ((DeviceLedCount)*3));
-			
-			if(ColorCompression_enable)
-			{
-				for(let runCount = 0; runCount < DeviceLedCount * 3 / multiplier; runCount++)
-				{
-					compressedRGB[(runCount*3)] = (((DeviceRGBData[(runCount*6)] & 0xFF) >> 4) | ((((DeviceRGBData[(runCount*6)+1] & 0xFF) >> 4) & 0xFF) << 4));
-					compressedRGB[(runCount*3)+1] = (((DeviceRGBData[(runCount*6)+2] & 0xFF) >> 4) | ((((DeviceRGBData[(runCount*6)+3] & 0xFF) >> 4) & 0xFF) << 4));
-					compressedRGB[(runCount*3)+2] = (((DeviceRGBData[(runCount*6)+4] & 0xFF) >> 4) | ((((DeviceRGBData[(runCount*6)+5] & 0xFF) >> 4) & 0xFF) << 4));
-				}
-			}
-
-			var NumPackets = Math.ceil(DeviceLedCount / MaxLedsInPacket / multiplier);
-
-			for(var CurrPacket = 1; CurrPacket <= NumPackets; CurrPacket++)
-			{
-				var packet = [0x00, CurrPacket, NumPackets, currComp + 1, 0xAA];
-				if(ColorCompression_enable)
-				{
-					packet = packet.concat(compressedRGB.splice(0, 60));
-				}
-				else
-				{
-					packet = packet.concat(DeviceRGBData.splice(0, 60));
-				}
-				device.write(packet, 65);
-			}
+			compressedRGB[(runCount*3)] = (((RGBData[(runCount*6)] & 0xFF) >> 4) | ((((RGBData[(runCount*6)+1] & 0xFF) >> 4) & 0xFF) << 4));
+			compressedRGB[(runCount*3)+1] = (((RGBData[(runCount*6)+2] & 0xFF) >> 4) | ((((RGBData[(runCount*6)+3] & 0xFF) >> 4) & 0xFF) << 4));
+			compressedRGB[(runCount*3)+2] = (((RGBData[(runCount*6)+4] & 0xFF) >> 4) | ((((RGBData[(runCount*6)+5] & 0xFF) >> 4) & 0xFF) << 4));
 		}
 	}
-}
+
+	var NumPackets = Math.ceil(ChannelLedCount / MaxLedsInPacket / multiplier);
+
+	for(var CurrPacket = 1; CurrPacket <= NumPackets; CurrPacket++)
+	{
+		var packet = [0x00, CurrPacket, NumPackets, 0x00, 0xAA];
+		packet = packet.concat(ColorCompression_enable ? compressedRGB.splice(0, 60) : RGBData.splice(0, 60));
+		device.write(packet, 65);
+	}
+}	
 
 function hexToRgb(hex)
 {

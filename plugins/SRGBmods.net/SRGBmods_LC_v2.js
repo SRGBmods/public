@@ -17,6 +17,7 @@ export function ControllableParameters()
 		{"property":"shutdownColor", "group":"lighting", "label":"Shutdown Color", "min":"0", "max":"360", "type":"color", "default":"#000000"},
 		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
 		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"#FF0000"},
+		{"property":"ColorCompression_enable", "group":"", "label":"Enable Color Compression (reduces color spectrum & raises frame rate)", "type":"boolean", "default":"false", "tooltip":"Changes are applied after 3sec, but ONLY when the device is ENABLED!"},
 		{"property":"StatusLED_enable", "group":"", "label":"Enable Onboard Status LED", "type":"boolean", "default":"false", "tooltip":"Changes are applied after 3sec, but ONLY when the device is ENABLED!"},
 		{"property":"HWL_enable", "group":"", "label":"Enable Hardware Lighting", "type":"boolean", "default":"false", "tooltip":"Changes are applied after 3sec, but ONLY when the device is ENABLED!"},
 		{"property":"HWL_effectMode", "group":"", "label":"Hardware Lighting Effect", "type":"combobox", "values":["Rainbow Wave", "Rainbow Cycle", "Solid Color", "Breathing Color"], "default":"Rainbow Wave", "tooltip":"Changes are applied after 3sec, but ONLY when the device is ENABLED!"},
@@ -51,7 +52,7 @@ function SetupChannels()
 	}
 }
 
-const PluginVersion = "1.0.0";
+const PluginVersion = "1.1.0";
 
 const vKeyNames = [];
 const vKeyPositions = [];
@@ -125,6 +126,9 @@ function SendChannel(Channel, shutdown = false)
 	let ChannelLedCount = device.channel(ChannelArray[Channel][0]).ledCount > ChannelArray[Channel][1] ? ChannelArray[Channel][1] : device.channel(ChannelArray[Channel][0]).ledCount;
 
 	let RGBData = [];
+	
+	let multiplier = ColorCompression_enable ? 2 : 1;
+	let compressedRGB = [];
 
 	if(shutdown)
 	{
@@ -138,23 +142,25 @@ function SendChannel(Channel, shutdown = false)
 	{
 		const deviceCh = device.channel(ChannelArray[Channel][0]);
 		RGBData = deviceCh.getColors("Inline");
-		const components = deviceCh.getComponentNames();
-		const componentCount = components.length;
+	}
 
-		for(let currComp = 0; currComp < componentCount; currComp++)
+	if(ColorCompression_enable)
+	{
+		for(let runCount = 0; runCount < ChannelLedCount * 3 / multiplier; runCount++)
 		{
-			var DeviceLedCount = deviceCh.getComponentData(components[currComp]).LedCount;
-			const DeviceRGBData = RGBData.splice(0, ((DeviceLedCount)*3));
-			
-			var NumPackets = Math.ceil(DeviceLedCount / MaxLedsInPacket);
-
-			for(var CurrPacket = 1; CurrPacket <= NumPackets; CurrPacket++)
-			{
-				var packet = [0x00, CurrPacket, 0x00, NumPackets, currComp + 1, 0xAA];
-				packet = packet.concat(DeviceRGBData.splice(0, 507));
-				device.write(packet, 513);
-			}
+			compressedRGB[(runCount*3)] = (((RGBData[(runCount*6)] & 0xFF) >> 4) | ((((RGBData[(runCount*6)+1] & 0xFF) >> 4) & 0xFF) << 4));
+			compressedRGB[(runCount*3)+1] = (((RGBData[(runCount*6)+2] & 0xFF) >> 4) | ((((RGBData[(runCount*6)+3] & 0xFF) >> 4) & 0xFF) << 4));
+			compressedRGB[(runCount*3)+2] = (((RGBData[(runCount*6)+4] & 0xFF) >> 4) | ((((RGBData[(runCount*6)+5] & 0xFF) >> 4) & 0xFF) << 4));
 		}
+	}
+
+	var NumPackets = Math.ceil(ChannelLedCount / MaxLedsInPacket / multiplier);
+
+	for(var CurrPacket = 1; CurrPacket <= NumPackets; CurrPacket++)
+	{
+		var packet = [0x00, CurrPacket, 0x00, NumPackets, 0x00, 0xAA];
+		packet = packet.concat(ColorCompression_enable ? compressedRGB.splice(0, 507) : RGBData.splice(0, 507));
+		device.write(packet, 513);
 	}
 }
 
@@ -169,6 +175,7 @@ function hexToRgb(hex)
 	return colors;
 }
 
+export function onColorCompression_enableChanged(){ HWL_setting_updated(); }
 export function onStatusLED_enableChanged(){ HWL_setting_updated(); }
 export function onHWL_enableChanged(){ HWL_setting_updated(); }
 export function onHWL_effectModeChanged(){ HWL_setting_updated(); }
@@ -198,8 +205,9 @@ function updateHWLsettings()
 		var hwlreturn = HWL_return == true ? 0x01 : 0x00;
 		var hwlcolor = hexToRgb(HWL_color);
 		var statusledenable = StatusLED_enable == true ? 0x01 : 0x00;
+		var colorcompressionenable = ColorCompression_enable == true ? 0x01 : 0x00;
 			
-		let packet = [0x00, 0x00, 0x00, 0x00, 0x00, 0xBB, hwlenable, hwlreturn, HWL_returnafter, hwleffectMode, HWL_effectSpeed, HWL_brightness, hwlcolor[0], hwlcolor[1], hwlcolor[2], statusledenable ];
+		let packet = [0x00, 0x00, 0x00, 0x00, 0x00, 0xBB, hwlenable, hwlreturn, HWL_returnafter, hwleffectMode, HWL_effectSpeed, HWL_brightness, hwlcolor[0], hwlcolor[1], hwlcolor[2], statusledenable, colorcompressionenable ];
 		device.write(packet, 513);
 	}
 }
