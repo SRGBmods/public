@@ -1,4 +1,3 @@
-// SRGBmods LED Controller v1
 export function Name() { return "SRGBmods LED Controller v1"; }
 export function VendorId() { return 0x16D0; }
 export function ProductId() { return 0x1205; }
@@ -52,7 +51,7 @@ function SetupChannels()
 	}
 }
 
-const PluginVersion = "1.1.0";
+const PluginVersion = "1.2.0";
 
 const vKeyNames = [];
 const vKeyPositions = [];
@@ -123,7 +122,8 @@ export function Shutdown()
 
 function SendChannel(Channel, shutdown = false)
 {
-	let ChannelLedCount = device.channel(ChannelArray[Channel][0]).ledCount > ChannelArray[Channel][1] ? ChannelArray[Channel][1] : device.channel(ChannelArray[Channel][0]).ledCount;
+	let componentChannel = device.channel(ChannelArray[Channel][0]);
+	let ChannelLedCount = componentChannel.ledCount > ChannelArray[Channel][1] ? ChannelArray[Channel][1] : device.channel(ChannelArray[Channel][0]).ledCount;
 
 	let RGBData = [];
 	
@@ -137,6 +137,12 @@ function SendChannel(Channel, shutdown = false)
 	else if(LightingMode === "Forced")
 	{
 		RGBData = device.createColorArray(forcedColor, ChannelLedCount, "Inline");
+	}
+	else if(componentChannel.shouldPulseColors())
+	{
+		ChannelLedCount = 512;
+		const pulseColor = device.getChannelPulseColor(ChannelArray[Channel][0]);
+		RGBData = device.createColorArray(pulseColor, ChannelLedCount, "Inline");
 	}
 	else
 	{
@@ -154,11 +160,11 @@ function SendChannel(Channel, shutdown = false)
 		}
 	}
 
-	var NumPackets = Math.ceil(ChannelLedCount / MaxLedsInPacket / multiplier);
+	let NumPackets = Math.ceil(ChannelLedCount / MaxLedsInPacket / multiplier);
 
-	for(var CurrPacket = 1; CurrPacket <= NumPackets; CurrPacket++)
+	for(let CurrPacket = 1; CurrPacket <= NumPackets; CurrPacket++)
 	{
-		var packet = [0x00, CurrPacket, NumPackets, 0x00, 0xAA];
+		let packet = [0x00, CurrPacket, NumPackets, 0x00, 0xAA];
 		packet = packet.concat(ColorCompression_enable ? compressedRGB.splice(0, 60) : RGBData.splice(0, 60));
 		device.write(packet, 65);
 	}
