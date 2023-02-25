@@ -37,7 +37,7 @@ export function DeviceMessages()
 const DeviceMaxLedLimit = 4056;
 let ChannelArray = 
 [
-	["Channel 1", 4056],
+	["Channel 1", DeviceMaxLedLimit],
 ];
 
 function SetupChannels()

@@ -35,10 +35,10 @@ export function DeviceMessages()
 	];
 }
 
-const DeviceMaxLedLimit = 512;
+const DeviceMaxLedLimit = 800;
 let ChannelArray = 
 [
-	["Channel 1", 512],
+	["Channel 1", DeviceMaxLedLimit],
 ];
 
 function SetupChannels()
@@ -51,7 +51,7 @@ function SetupChannels()
 	}
 }
 
-const PluginVersion = "1.2.0";
+const PluginVersion = "1.2.5";
 
 const vKeyNames = [];
 const vKeyPositions = [];
