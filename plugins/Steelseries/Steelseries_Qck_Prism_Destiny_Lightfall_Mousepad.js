@@ -1,7 +1,7 @@
 export function Name() { return "Steelseries QcK Prism Cloth XL Destiny Lightfall Edition"; }
 export function VendorId() { return 0x1038; }
 export function Documentation(){ return "troubleshooting/steelseries"; }
-export function ProductId() { return 0x1630; }
+export function ProductId() { return 0x1520; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Size() { return [8, 2]; }
 export function DefaultPosition() { return [240, 120]; }
