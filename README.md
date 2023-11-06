@@ -15,3 +15,5 @@ Currently exerimental devices:
 ![Screenshot of the branch you need to pick!](https://github.com/SRGBmods/public/blob/unsupported-experiments/_images/pick-branch.jpg)
 
 If in SignalRGB you clicked the button make sure to pick the unsupported-experiments branch!
+
+HINT: If you use the Elgato-Friendly mode and position the device on a black background the Stream Deck will function as normal, then when you want a nightclub of lighting you switch to a different effect and layout!
