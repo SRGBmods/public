@@ -7,10 +7,10 @@ This branch is 100% unsupported and experimental, if it works for you that's awe
 
 Currently exerimental devices:
 * Elgato / Corsair:
-	* Stream Deck model 1
-	* Stream Deck model 2
-	* Stream Deck XL
-	* Stream Deck + (Plus)
+	* Stream Deck model 1 (Original Stream Deck no more than 16 FPS due to packet size requirements)
+	* Stream Deck model 2 (Corsair jumped in and easily 32 FPS)
+	* Stream Deck XL (Corsair still involved and 32 FPS)
+	* Stream Deck + (Plus) (Corsair spawned this knobby stepchild and it can do 32 FPS)
 
 ![Screenshot of the branch you need to pick!](https://github.com/SRGBmods/public/blob/unsupported-experiments/_images/pick-branch.jpg)
 
