@@ -17,3 +17,5 @@ Currently exerimental devices:
 If in SignalRGB you clicked the button make sure to pick the unsupported-experiments branch!
 
 HINT: If you use the Elgato-Friendly mode and position the device on a black background the Stream Deck will function as normal, then when you want a nightclub of lighting you switch to a different effect and layout!
+
+## IF you need support open an ISSUE here on github or hit us up on the [SignalRGB Plugin Test Server](https://discord.gg/J5dwtcNhqC) make sure to visit the #roles channel for specific support of the above devices.
