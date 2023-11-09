@@ -171,7 +171,7 @@ function colorgrabber(shutdown=false)
 			let iXoffset = (iIdx % RowWidth) * ButtonSize;
 			let iYoffset = Math.floor(iIdx / RowWidth) * ButtonSize;
 
-			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {outputWidth:96, outputHeight:96, flipV: true, flipH: true});
+			RGBData = device.getImageBuffer(iXoffset, iYoffset, ButtonSize, ButtonSize, {outputWidth:128, outputHeight:128, flipV: true, flipH: true});
 
 			let BytesLeft = RGBData.length;
 			let packetsSent = 0;
@@ -197,7 +197,7 @@ function colorgrabber(shutdown=false)
 		{
 			let buttoncolor = makeHexString(color);
 
-			rgbdata = device.ConvertColorToImageBuffer(buttoncolor, 96, 96, "JPEG");
+			rgbdata = device.ConvertColorToImageBuffer(buttoncolor, 128, 128, "JPEG");
 
 			let RGBLength = rgbdata.length.toString(10);
 			let firstbyte = RGBLength[1] + RGBLength[2];
