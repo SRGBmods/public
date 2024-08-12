@@ -2,6 +2,7 @@ export function Name() { return "Elgato Stream Deck Plus"; }
 export function VendorId() { return 0x0fd9; }
 export function ProductId() { return 0x0084; }
 export function Publisher() { return "WhirlwindFX"; }
+export function DeviceType() { return "other"; }
 export function Size() { return [241, 151]; }
 export function DefaultPosition(){return [240, 120];}
 export function DefaultScale(){return 8.0;}

@@ -3,6 +3,7 @@ export function VendorId() { return 0x0fd9; }
 export function ProductId() { return [0x006d, 0x0080]; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Documentation() { return "troubleshooting/corsair"; }
+export function DeviceType() { return "other"; }
 export function Size() { return [5, 3]; }
 export function DeviceMessage() { return ["This device needs additional functionality", "Edit plugin to adjust size for Canvas or Elgato-Friendly"]; }
 export function DefaultPosition(){return [0, 0];}
