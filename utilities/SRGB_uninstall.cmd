@@ -60,6 +60,10 @@ cmdkey /delete:whirlwindengine.firebase.auth/__FIRAPP_DEFAULT[0]
 cmdkey /delete:whirlwindengine.firebase.auth/__FIRAPP_DEFAULT[1]
 timeout /t 1 > nul 2> nul
 echo Attempting to remove SignalRgbDriver.sys
+taskkill /f /im "SignalRgbLauncher.exe"
+taskkill /f /im "SignalRgb.exe"
+taskkill /f /im "SignalRgbSplash.exe"
+net stop signalrgbdriver
 takeown /f C:\Windows\System32\drivers\SignalRgbDriver.sys
 icacls "C:\Windows\System32\drivers\SignalRgbDriver.sys" /Q /grant %%username%%:f
 del "C:\Windows\System32\drivers\SignalRgbDriver.sys" /q /f
