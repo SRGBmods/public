@@ -1,6 +1,6 @@
 export function Name() { return "Elgato Stream Deck XL"; }
 export function VendorId() { return 0x0fd9; }
-export function ProductId() { return 0x006c; }
+export function ProductId() { return [0x006c,0x008f]; }
 export function Publisher() { return "WhirlwindFX"; }
 export function Documentation() { return "troubleshooting/corsair"; }
 export function DeviceType() { return "other"; }
