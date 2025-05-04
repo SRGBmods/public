@@ -1,6 +1,6 @@
 export function Name() { return "Elgato Streamdeck Mini"; }
 export function VendorId() { return 0x0fd9; }
-export function ProductId() { return 0x0063; }
+export function ProductId() { return [0x0063, 0x0090]; }
 export function Publisher() { return "WhirlwindFX"; }
 export function DeviceType() { return "other"; }
 export function Size() { return [91, 61]; }
