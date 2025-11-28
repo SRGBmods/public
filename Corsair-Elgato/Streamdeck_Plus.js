@@ -30,10 +30,12 @@ export function ControllableParameters() {
 
 // --- PIXEL LOGIC (Converted from Ratios) ---
 // These are hard integers. Changing gaps will NOT shrink buttons.
-const ButtonSize = 56;
-const hGap = 30;       // Horizontal space between buttons
-const vGap = 15;       // Vertical space between Row 1 and Row 2
-const screenGap = 33;  // Vertical space between Row 2 and Screen
+const ButtonSize = 50;
+const hGap = 35;       // Horizontal space between buttons
+const vGap = 20;       // Vertical space between Row 1 and Row 2
+const hPadding = 9;
+const vPadding = 0;
+const screenGap = 36;  // Vertical space between Row 2 and Screen
 
 // Calculate where the screen starts based on the pixels above
 const stripY = (ButtonSize * 2) + vGap + screenGap;
@@ -242,8 +244,8 @@ function colorgrabber() {
         const col = iIdx % 4;
         const row = Math.floor(iIdx / 4);
 
-        const iXoffset = col * (ButtonSize + hGap);
-        const iYoffset = row * (ButtonSize + vGap);
+        const iXoffset = hPadding + col * (ButtonSize + hGap);
+        const iYoffset = vPadding + row * (ButtonSize + vGap);
 
         RGBData = device.getImageBuffer(Math.floor(iXoffset), Math.floor(iYoffset), Math.floor(ButtonSize), Math.floor(ButtonSize), { flipH: false, outputWidth: 120, outputHeight: 120, format: "JPEG" });
 
