@@ -216,3 +216,8 @@ export function Validate(endpoint)
 {
 	return endpoint.interface === 0;
 }
+
+export function ImageUrl()
+{
+	return "https://raw.githubusercontent.com/SRGBmods/public/unsupported-experiments/_images/Streamdeck-Mini.png";
+}
