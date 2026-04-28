@@ -3,7 +3,7 @@ export function VendorId() { return 0x0fd9; }
 export function ProductId() { return 0x0084; }
 export function Publisher() { return "WhirlwindFX"; }
 export function DeviceType() { return "other"; }
-export function Size() { return [320, 200]; }
+export function Size() { return [160, 100]; }
 const [CanvasW, CanvasH] = Size();
 export function DefaultPosition() { return [0, 0]; }
 export function DefaultScale() { return 8.0; }
@@ -15,6 +15,7 @@ hwbrightness:readonly
 shutdownColor:readonly
 LightingMode:readonly
 forcedColor:readonly
+elgatoFriendly:readonly
 */
 export function ControllableParameters() {
     return [
@@ -28,48 +29,69 @@ export function ControllableParameters() {
     ];
 }
 
-// --- PIXEL LOGIC (Converted from Ratios) ---
-// These are hard integers. Changing gaps will NOT shrink buttons.
-const ButtonSize = 50;
-const hGap = 35;       // Horizontal space between buttons
-const vGap = 20;       // Vertical space between Row 1 and Row 2
-const hPadding = 9;
-const vPadding = 0;
-const screenGap = 36;  // Vertical space between Row 2 and Screen
+// --- DYNAMIC PIXEL LOGIC ---
+const scaleX = CanvasW / 320;
+const scaleY = CanvasH / 200;
 
-// Calculate where the screen starts based on the pixels above
-const stripY = (ButtonSize * 2) + vGap + screenGap;
+const ButtonSizeX = Math.floor(50 * scaleX);
+const ButtonSizeY = Math.floor(50 * scaleY);
+const hGap = Math.floor(35 * scaleX);
+const vGap = Math.floor(20 * scaleY);
+const hPadding = Math.floor(9 * scaleX);
+const vPadding = Math.floor(0 * scaleY);
+const screenGap = Math.floor(36 * scaleY);
+
+const stripY = (ButtonSizeY * 2) + vGap + screenGap;
 const stripH = CanvasH - stripY;
 
 const vLedNames = ["LED 1", "LED 2", "LED 3", "LED 4", "LED 5", "LED 6", "LED 7", "LED 8", "Big Screen"];
-const vLedPositions =
-    [
-        [0, 0], [1, 0], [2, 0], [3, 0],
-        [0, 1], [1, 1], [2, 1], [3, 1],
-        [0, 2]
-    ];
+const vLedPositions = [
+    [0, 0], [1, 0], [2, 0], [3, 0],
+    [0, 1], [1, 1], [2, 1], [3, 1],
+    [2, 2]
+];
 
 export function LedNames() { return vLedNames; }
 export function LedPositions() { return vLedPositions; }
 
+/**
+ * Hosts map getImageBuffer() through DeviceContentBounds → effect canvas.
+ * RGBJunkie: tight rect over keys + strip (matches app override for 0x0084).
+ * SignalRGB / others: full device rect — same as hosts that defaulted when this export was absent.
+ */
+function rgbJunkieStreamDeckPlusDeviceContentBounds() {
+    const scaleX = CanvasW / 320;
+    const ButtonSizeX = Math.floor(50 * scaleX);
+    const hGap = Math.floor(35 * scaleX);
+    const hPadding = Math.floor(9 * scaleX);
+    const minX = hPadding;
+    const minY = 0;
+    const maxX = hPadding + 3 * (ButtonSizeX + hGap) + ButtonSizeX;
+    const maxY = CanvasH - 1;
+    return [minX, minY, maxX, maxY];
+}
+
+export function DeviceContentBounds() {
+    if (typeof device.rgbJunkieHost !== "undefined" && device.rgbJunkieHost) {
+        return rgbJunkieStreamDeckPlusDeviceContentBounds();
+    }
+    return [0, 0, CanvasW, CanvasH];
+}
+
+let lastButtonRGB;
+
 export function Initialize() {
     setBrightness();
     lastButtonRGB = Array.from(Array(vLedNames.length), () => Array(3).fill(0));
-    if (elgatoFriendly) {
-        device.setSize([8, 4]);
-    } else {
-        device.setSize([CanvasW, CanvasH]);
-    }
-
-    device.setFrameRateTarget(30);
+    device.setSize([CanvasW, CanvasH]);
+    
+    // Lowered to 30 FPS to prevent USB HID buffer overflows
+    device.setFrameRateTarget(30); 
 }
 
 export function onelgatoFriendlyChanged() {
-    if (elgatoFriendly) {
-        device.setSize([8, 4]);
-    } else {
-        device.setSize([CanvasW, CanvasH]);
-    }
+    // Forcing device.setSize dynamically can cause crashes, keeping it locked to Canvas
+    device.setSize([CanvasW, CanvasH]);
 }
 
 export function Render() {
@@ -80,7 +102,6 @@ export function Render() {
         colorgrabber();
         bigScreenGrabber();
     }
-
 }
 
 export function Shutdown() {
@@ -111,27 +132,21 @@ function makeHexString(ColorArray) {
     hexstring += decimalToHex(ColorArray[0], 2);
     hexstring += decimalToHex(ColorArray[1], 2);
     hexstring += decimalToHex(ColorArray[2], 2);
-
     return hexstring;
 }
 
 function decimalToHex(d, padding) {
     let hex = Number(d).toString(16);
     padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-
     while (hex.length < padding) {
         hex = "0" + hex;
     }
-
     return hex;
 }
-let lastButtonRGB;
 
 function colorgrabberSingle(shutdown = false) {
     for (let iIdx = 0; iIdx < vLedNames.length - 1; iIdx++) {
         let RGBData = [];
-        const iPxX = vLedPositions[iIdx][0];
-        const iPxY = vLedPositions[iIdx][1];
         let color;
 
         if (shutdown) {
@@ -150,7 +165,6 @@ function colorgrabberSingle(shutdown = false) {
             lastButtonRGB[iIdx][2] = color[2];
 
             const buttoncolor = makeHexString(color);
-
             RGBData = device.ConvertColorToImageBuffer(buttoncolor, 120, 120, "JPEG");
 
             let BytesLeft = RGBData.length;
@@ -158,13 +172,11 @@ function colorgrabberSingle(shutdown = false) {
 
             while (BytesLeft > 0) {
                 const BytesToSend = Math.min(1016, BytesLeft);
-
                 if (BytesToSend < 1016) {
                     sendZone(BytesLeft, iIdx, RGBData.splice(0, BytesLeft), packetsSent, 0x01);
                 } else {
                     sendZone(BytesToSend, iIdx, RGBData.splice(0, BytesToSend), packetsSent, 0x00);
                 }
-
                 BytesLeft -= BytesToSend;
                 packetsSent++;
             }
@@ -174,8 +186,6 @@ function colorgrabberSingle(shutdown = false) {
 
 function bigScreenGrabberSingle(shutdown = false) {
     let RGBData = [];
-    const iPxX = vLedPositions[8][0];
-    const iPxY = vLedPositions[8][1];
     let color;
 
     if (shutdown) {
@@ -192,7 +202,6 @@ function bigScreenGrabberSingle(shutdown = false) {
         lastButtonRGB[8][2] = color[2];
 
         const buttoncolor = makeHexString(color);
-
         RGBData = device.ConvertColorToImageBuffer(buttoncolor, 800, 100, "JPEG");
 
         let BytesLeft = RGBData.length;
@@ -200,13 +209,11 @@ function bigScreenGrabberSingle(shutdown = false) {
 
         while (BytesLeft > 0) {
             const BytesToSend = Math.min(1008, BytesLeft);
-
             if (BytesToSend < 1008) {
                 sendBigScreen(BytesLeft, packetsSent, RGBData.splice(0, BytesLeft), 0x01);
             } else {
                 sendBigScreen(BytesToSend, packetsSent, RGBData.splice(0, BytesToSend), 0x00);
             }
-
             BytesLeft -= BytesToSend;
             packetsSent++;
         }
@@ -215,23 +222,24 @@ function bigScreenGrabberSingle(shutdown = false) {
 
 function bigScreenGrabber() {
     let RGBData = [];
-    const safeW = CanvasW - 1;
-    const safeH = stripH - 1;
+    
+    // Fail-safes to ensure width/height aren't 0 and don't go out of bounds
+    const safeW = Math.max(1, CanvasW - 1);
+    const safeH = Math.max(1, stripH - 1);
+    const startY = Math.min(stripY, CanvasH - 2);
 
-    RGBData = device.getImageBuffer(0, stripY, safeW, safeH, { flipH: false, outputWidth: 800, outputHeight: 100, format: "JPEG" });
+    RGBData = device.getImageBuffer(0, startY, safeW, safeH, { flipH: false, outputWidth: 800, outputHeight: 100, format: "JPEG" });
 
     let BytesLeft = RGBData.length;
     let packetsSent = 0;
 
     while (BytesLeft > 0) {
         const BytesToSend = Math.min(1008, BytesLeft);
-
         if (BytesToSend < 1008) {
             sendBigScreen(BytesLeft, packetsSent, RGBData.splice(0, BytesLeft), 0x01);
         } else {
             sendBigScreen(BytesToSend, packetsSent, RGBData.splice(0, BytesToSend), 0x00);
         }
-
         BytesLeft -= BytesToSend;
         packetsSent++;
     }
@@ -244,26 +252,29 @@ function colorgrabber() {
         const col = iIdx % 4;
         const row = Math.floor(iIdx / 4);
 
-        const iXoffset = hPadding + col * (ButtonSize + hGap);
-        const iYoffset = vPadding + row * (ButtonSize + vGap);
+        const iXoffset = hPadding + col * (ButtonSizeX + hGap);
+        const iYoffset = vPadding + row * (ButtonSizeY + vGap);
 
-        RGBData = device.getImageBuffer(Math.floor(iXoffset), Math.floor(iYoffset), Math.floor(ButtonSize), Math.floor(ButtonSize), { flipH: false, outputWidth: 120, outputHeight: 120, format: "JPEG" });
+        // Fail-safe to ensure we don't request pixels outside the canvas
+        const fetchWidth = Math.min(ButtonSizeX, CanvasW - iXoffset);
+        const fetchHeight = Math.min(ButtonSizeY, CanvasH - iYoffset);
 
+        if (fetchWidth > 0 && fetchHeight > 0) {
+            RGBData = device.getImageBuffer(iXoffset, iYoffset, fetchWidth, fetchHeight, { flipH: false, outputWidth: 120, outputHeight: 120, format: "JPEG" });
 
-        let BytesLeft = RGBData.length;
-        let packetsSent = 0;
+            let BytesLeft = RGBData.length;
+            let packetsSent = 0;
 
-        while (BytesLeft > 0) {
-            const BytesToSend = Math.min(1016, BytesLeft);
-
-            if (BytesToSend < 1016) {
-                sendZone(BytesLeft, iIdx, RGBData.splice(0, BytesLeft), packetsSent, 0x01);
-            } else {
-                sendZone(BytesToSend, iIdx, RGBData.splice(0, BytesToSend), packetsSent, 0x00);
+            while (BytesLeft > 0) {
+                const BytesToSend = Math.min(1016, BytesLeft);
+                if (BytesToSend < 1016) {
+                    sendZone(BytesLeft, iIdx, RGBData.splice(0, BytesLeft), packetsSent, 0x01);
+                } else {
+                    sendZone(BytesToSend, iIdx, RGBData.splice(0, BytesToSend), packetsSent, 0x00);
+                }
+                BytesLeft -= BytesToSend;
+                packetsSent++;
             }
-
-            BytesLeft -= BytesToSend;
-            packetsSent++;
         }
     }
 }
@@ -282,7 +293,6 @@ function hexToRgb(hex) {
     colors[0] = parseInt(result[1], 16);
     colors[1] = parseInt(result[2], 16);
     colors[2] = parseInt(result[3], 16);
-
     return colors;
 }
 
